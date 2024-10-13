@@ -5,14 +5,27 @@ using UnityEngine.InputSystem;
 public class CSharpEventExample : MonoBehaviour
 {
     private PlayerInput playerInput;
-    private Vector2 velocity;//移動速度
+    private Vector3 velocity;//移動速度
     bool isMove;
     bool isSubmit;
     bool isCansel;
+    bool isShot;
+    bool isSlow;
+    bool isBomb;
 
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
+    }
+
+    private void Start()
+    {
+        isMove = false;
+        isSubmit = false;
+        isCansel = false;
+        isShot = false;
+        isSlow = false;
+        isBomb = false;
     }
 
     private void OnEnable()
@@ -22,6 +35,9 @@ public class CSharpEventExample : MonoBehaviour
         playerInput.onActionTriggered += OnMove;
         playerInput.onActionTriggered += OnSubmit;
         playerInput.onActionTriggered += OnCancel;
+        playerInput.onActionTriggered += OnShot;
+        playerInput.onActionTriggered += OnSlow;
+        playerInput.onActionTriggered += OnBomb;
     }
 
     private void OnDisable()
@@ -31,8 +47,13 @@ public class CSharpEventExample : MonoBehaviour
         playerInput.onActionTriggered -= OnMove;
         playerInput.onActionTriggered -= OnSubmit;
         playerInput.onActionTriggered -= OnCancel;
+        playerInput.onActionTriggered -= OnShot;
+        playerInput.onActionTriggered -= OnSlow;
+        playerInput.onActionTriggered -= OnBomb;
     }
 
+    /// <summary> 移動 </summary>
+    /// <param name="context"></param>
     private void OnMove(InputAction.CallbackContext context)
     {
         //Move以外は処理しない
@@ -44,12 +65,15 @@ public class CSharpEventExample : MonoBehaviour
         //MoveActionの入力値を取得
         var axis = context.ReadValue<Vector2>();
 
-        //移動速度を保持
-        velocity = axis.normalized;
+        axis.Normalize();
+        Debug.Log(axis);
 
-        Debug.Log(velocity);
+        //移動速度を保持
+        velocity = new Vector3(axis.x, axis.y, 0.0f);
     }
 
+    /// <summary> 決定 </summary>
+    /// <param name="context"></param>
     private void OnSubmit(InputAction.CallbackContext context)
     {
         //Submit以外は処理しない
@@ -57,6 +81,8 @@ public class CSharpEventExample : MonoBehaviour
         isSubmit = context.action.WasPressedThisFrame();
     }
 
+    /// <summary> キャンセル </summary>
+    /// <param name="context"></param>
     private void OnCancel(InputAction.CallbackContext context)
     {
         //Cancel以外は処理しない
@@ -64,7 +90,34 @@ public class CSharpEventExample : MonoBehaviour
         isCansel = context.action.WasPressedThisFrame();
     }
 
-    public Vector2 GetVelocity()
+    /// <summary> 攻撃 </summary>
+    /// <param name="context"></param>
+    private void OnShot(InputAction.CallbackContext context)
+    {
+        //Shot以外は処理しない
+        if (context.action.name != "Shot") return;
+        isShot = context.action.WasPressedThisFrame();
+    }
+
+    /// <summary> スロー </summary>
+    /// <param name="context"></param>
+    private void OnSlow(InputAction.CallbackContext context)
+    {
+        //Slow以外は処理しない
+        if (context.action.name != "Slow") return;
+        isSlow = context.action.IsPressed();
+    }
+
+    /// <summary> 爆弾 </summary>
+    /// <param name="context"></param>
+    private void OnBomb(InputAction.CallbackContext context)
+    {
+        //Bomb以外は処理しない
+        if (context.action.name != "Bomb") return;
+        isBomb = context.action.WasPressedThisFrame();
+    }
+
+    public Vector3 GetVelocity()
     {
         return velocity;
     }
@@ -83,20 +136,35 @@ public class CSharpEventExample : MonoBehaviour
     {
         return isCansel;
     }
+
+    public bool IsShot()
+    {
+        return isShot;
+    }
+    public bool IsSlow()
+    {
+        return isSlow;
+    }
+
+    public bool IsBomb()
+    {
+        return isBomb;
+    }
+
     private void Update()
     {
-        if (IsMove())
-        {
-            Debug.Log("update:移動");
-        }
-        if (IsSubmit())
-        {
-            Debug.Log("update:決定");
-        }
-        if (IsCancel())
-        {
-            Debug.Log("update:キャンセル");
-        }
+        //if (IsMove())
+        //{
+        //    Debug.Log("update:移動");
+        //}
+        //if (IsSubmit())
+        //{
+        //    Debug.Log("update:決定");
+        //}
+        //if (IsCancel())
+        //{
+        //    Debug.Log("update:キャンセル");
+        //}
     }
         private void FixedUpdate()
     {
@@ -112,10 +180,22 @@ public class CSharpEventExample : MonoBehaviour
         {
             Debug.Log("キャンセル");
         }
-
-        isMove = false;
+        if(IsShot())
+        {
+            Debug.Log("攻撃");
+        }
+        if (IsSlow())
+        {
+            Debug.Log("スロー");
+        }
+        if (IsBomb())
+        {
+            Debug.Log("爆弾");
+        }
         isSubmit = false;
         isCansel = false;
+        isShot = false;
+        isBomb = false;
     }
 }
 
