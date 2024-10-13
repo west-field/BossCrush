@@ -83,8 +83,22 @@ public class CSharpEventExample : MonoBehaviour
     {
         return isCansel;
     }
-
     private void Update()
+    {
+        if (IsMove())
+        {
+            Debug.Log("update:ˆÚ“®");
+        }
+        if (IsSubmit())
+        {
+            Debug.Log("update:Œˆ’è");
+        }
+        if (IsCancel())
+        {
+            Debug.Log("update:ƒLƒƒƒ“ƒZƒ‹");
+        }
+    }
+        private void FixedUpdate()
     {
         if (IsMove())
         {
