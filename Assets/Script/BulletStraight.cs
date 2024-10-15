@@ -9,7 +9,7 @@ public class BulletStraight : BulletParent
     {
         base.Start();
 
-        speed = 5.0f;
+        speed = 10.0f;
         velocity = new Vector3(1.0f, 0.0f, 0.0f);
     }
 

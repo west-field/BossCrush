@@ -8,11 +8,17 @@ public class PlayerScript : MonoBehaviour
     private GameObject bulletPrefab;//^‚Á’¼‚®“®‚­’e‚ÌƒvƒŒƒnƒu
     private float speed;//ˆÚ“®ƒXƒs[ƒh
 
+    private bool isShot;//¶¬‚Å‚«‚é‚©‚Ç‚¤‚©
+    private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
+    private const float shotMaxTime = 15.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
+
     private void Start()
     {
         example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
         bulletPrefab = (GameObject)Resources.Load("BulletStraight");
         speed = 4.0f;
+        isShot = true;
+        shotElapsedTime = 0.0f;
     }
 
     private void FixedUpdate()
@@ -27,10 +33,33 @@ public class PlayerScript : MonoBehaviour
             this.transform.position -= example.GetVelocity() * Time.deltaTime * speed * 0.5f;
         }
 
+        Shot();
+    }
+
+    /// <summary> UŒ‚ˆ— </summary>
+    private void Shot()
+    {
         if (example.IsShot())
         {
-            Debug.Log("’e‚ğ¶¬");
-            Instantiate(bulletPrefab, this.transform.position, Quaternion.identity);
+            if (isShot)
+            {
+                Debug.Log("’e‚ğ¶¬");
+                Instantiate(bulletPrefab, this.transform.position, Quaternion.identity);
+                isShot = false;
+            }
+        }
+
+        //‚Ü‚¾UŒ‚‚Å‚«‚È‚¢‚Æ‚«
+        if (!isShot)
+        {
+            shotElapsedTime--;
+
+            //Œo‰ßŠÔ‚ª 0 ‚É‚È‚Á‚½‚ç
+            if (shotElapsedTime <= 0.0f)
+            {
+                shotElapsedTime = shotMaxTime;
+                isShot = true;//UŒ‚‚Å‚«‚é‚æ‚¤‚É
+            }
         }
     }
 }
