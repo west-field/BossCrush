@@ -96,7 +96,7 @@ public class CSharpEventExample : MonoBehaviour
     {
         //Shotà»äOÇÕèàóùÇµÇ»Ç¢
         if (context.action.name != "Shot") return;
-        isShot = context.action.WasPressedThisFrame();
+        isShot = context.action.IsPressed();
     }
 
     /// <summary> ÉXÉçÅ[ </summary>
@@ -194,7 +194,6 @@ public class CSharpEventExample : MonoBehaviour
         }
         isSubmit = false;
         isCansel = false;
-        isShot = false;
         isBomb = false;
     }
 }
