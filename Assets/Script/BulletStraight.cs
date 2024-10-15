@@ -19,4 +19,13 @@ public class BulletStraight : BulletParent
         //Debug.Log("Ç‹Ç¡Ç∑ÇÆêiÇﬁíeÇÃMove");
         this.transform.position += velocity * Time.deltaTime * speed;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.transform.tag == "EnemyBullet")
+        {
+            Destroy(collision.gameObject);
+            Destroy(this.gameObject);
+        }
+    }
 }

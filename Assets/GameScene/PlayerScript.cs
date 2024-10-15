@@ -21,6 +21,15 @@ public class PlayerScript : MonoBehaviour
         shotElapsedTime = 0.0f;
     }
 
+    private void Update()
+    {
+        if (example.IsBomb())
+        {
+            //ƒ{ƒ€‚ğg‚¤‚Æ‰æ–Ê“à‚Ì“G’e‚ğ‚·‚×‚ÄÁ‚·‚±‚Æ‚ª‚Å‚«‚é
+            Debug.Log("ƒ{ƒ€‚ğg‚¤‚Æ‰æ–Ê“à‚Ì“G’e‚ğ‚·‚×‚ÄÁ‚·‚±‚Æ‚ª‚Å‚«‚é");
+        }
+    }
+
     private void FixedUpdate()
     {
         if (example.IsMove())
@@ -28,6 +37,7 @@ public class PlayerScript : MonoBehaviour
             this.transform.position += example.GetVelocity() * Time.deltaTime * speed;
         }
 
+        //’á‘¬‚É‚È‚é
         if (example.IsSlow())
         {
             this.transform.position -= example.GetVelocity() * Time.deltaTime * speed * 0.5f;
