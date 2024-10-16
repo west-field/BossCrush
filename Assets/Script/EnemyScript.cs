@@ -10,10 +10,12 @@ public class EnemyScript : MonoBehaviour
     private Vector3 defaultPosition;//移動量
     private float speed;//移動スピード
 
+    [SerializeField] int maxHp = 50;
+
     private void Start()
     {
         hPScript = new HPScript();
-        hPScript.Init(10);
+        hPScript.Init(maxHp);
 
         defaultPosition = this.transform.position;
         speed = 1.5f;

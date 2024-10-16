@@ -15,7 +15,8 @@ public class CSharpEventExample : MonoBehaviour
 
     private void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
+        //playerInput = GetComponent<PlayerInput>();
+        playerInput = GameObject.Find("Manager").GetComponent<PlayerInput>();
     }
 
     private void Start()
@@ -168,30 +169,30 @@ public class CSharpEventExample : MonoBehaviour
     }
         private void FixedUpdate()
     {
-        if (IsMove())
-        {
-            Debug.Log("移動");
-        }
-        if (IsSubmit())
-        {
-            Debug.Log("決定");
-        }
-        if (IsCancel())
-        {
-            Debug.Log("キャンセル");
-        }
-        if(IsShot())
-        {
-            Debug.Log("攻撃");
-        }
-        if (IsSlow())
-        {
-            Debug.Log("スロー");
-        }
-        if (IsBomb())
-        {
-            Debug.Log("爆弾");
-        }
+        //if (IsMove())
+        //{
+        //    Debug.Log("移動");
+        //}
+        //if (IsSubmit())
+        //{
+        //    Debug.Log("決定");
+        //}
+        //if (IsCancel())
+        //{
+        //    Debug.Log("キャンセル");
+        //}
+        //if(IsShot())
+        //{
+        //    Debug.Log("攻撃");
+        //}
+        //if (IsSlow())
+        //{
+        //    Debug.Log("スロー");
+        //}
+        //if (IsBomb())
+        //{
+        //    Debug.Log("爆弾");
+        //}
         isSubmit = false;
         isCansel = false;
         isBomb = false;
