@@ -12,6 +12,8 @@ public class PlayerScript : MonoBehaviour
     private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
     private const float shotMaxTime = 15.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
 
+    private HPScript hPScript;//HP
+
     private void Start()
     {
         example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
@@ -19,6 +21,9 @@ public class PlayerScript : MonoBehaviour
         speed = 4.0f;
         isShot = true;
         shotElapsedTime = 0.0f;
+
+        hPScript = new HPScript();
+        hPScript.Init(3);
     }
 
     private void Update()
@@ -32,6 +37,12 @@ public class PlayerScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(hPScript.IsDead())
+        {
+            Debug.Log("€‚ñ‚¾");
+            return;
+        }
+
         if (example.IsMove())
         {
             this.transform.position += example.GetVelocity() * Time.deltaTime * speed;
@@ -70,6 +81,16 @@ public class PlayerScript : MonoBehaviour
                 shotElapsedTime = shotMaxTime;
                 isShot = true;//UŒ‚‚Å‚«‚é‚æ‚¤‚É
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //ƒGƒlƒ~[‚ª”­Ë‚µ‚½’e‚É“–‚½‚Á‚½
+        if(collision.transform.tag == "EnemyBullet")
+        {
+            hPScript.Damage();
+            Destroy(collision.gameObject);
         }
     }
 }
