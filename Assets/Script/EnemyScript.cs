@@ -11,6 +11,8 @@ public class EnemyScript : MonoBehaviour
     private float speed;//移動スピード
 
     [SerializeField] int maxHp = 50;
+    [SerializeField] int score = 1000;
+    private ScoreManager scoreManager;
 
     private void Start()
     {
@@ -19,6 +21,8 @@ public class EnemyScript : MonoBehaviour
 
         defaultPosition = this.transform.position;
         speed = 1.5f;
+
+        scoreManager = GameObject.Find("Manager").GetComponent<ScoreManager>();
     }
 
     private void FixedUpdate()
@@ -39,6 +43,7 @@ public class EnemyScript : MonoBehaviour
             {
                 //色を変更する
                 this.GetComponent<SpriteRenderer>().color = Color.gray;
+                scoreManager.AddScore(score);
                 //this.GetComponent<BoxCollider2D>().enabled = false;
                 return;
             }

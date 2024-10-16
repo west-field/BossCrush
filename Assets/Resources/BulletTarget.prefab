@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5719691316958635162}
   - component: {fileID: 7635273374937647761}
   - component: {fileID: 1181062518504856824}
+  - component: {fileID: -3671474878447254001}
   m_Layer: 7
   m_Name: BulletTarget
   m_TagString: EnemyBullet
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 2
+  m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
@@ -126,7 +127,7 @@ BoxCollider2D:
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
-    drawMode: 2
+    drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
@@ -169,5 +170,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c33a9d73d72ba0439edcebe5659793a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-3671474878447254001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4971747660019092727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fce00cc4fec6974cbbc978678cd4289, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

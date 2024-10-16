@@ -15,6 +15,7 @@ public class BulletTarget : BulletParent
         //ターゲットの位置から自分の位置を引く
         velocity = player.transform.position - this.transform.position;
         velocity.Normalize();
-        Debug.Log(velocity);
+
+        GetComponent<Score>().SetScore(200);
     }
 }
