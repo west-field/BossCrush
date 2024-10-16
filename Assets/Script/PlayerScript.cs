@@ -10,7 +10,7 @@ public class PlayerScript : MonoBehaviour
 
     private bool isShot;//生成できるかどうか
     private float shotElapsedTime;//攻撃した後の経過時間
-    private const float shotMaxTime = 15.0f;//次攻撃ができるまでの時間
+    private const float shotMaxTime = 10.0f;//次攻撃ができるまでの時間
 
     private HPScript hPScript;//HP
 
@@ -91,6 +91,12 @@ public class PlayerScript : MonoBehaviour
         {
             hPScript.Damage();
             Destroy(collision.gameObject);
+        }
+
+        //エネミーに接触した時
+        if(collision.transform.tag == "Enemy")
+        {
+            hPScript.Damage();
         }
     }
 }
