@@ -13,13 +13,6 @@ public class BulletStraight : BulletParent
         velocity = new Vector3(1.0f, 0.0f, 0.0f);
     }
 
-    protected override void Move()
-    {
-        //base.Move();
-        //Debug.Log("Ç‹Ç¡Ç∑ÇÆêiÇﬁíeÇÃMove");
-        this.transform.position += velocity * Time.deltaTime * speed;
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.transform.tag == "EnemyBullet")

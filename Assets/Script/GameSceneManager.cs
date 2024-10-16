@@ -6,11 +6,14 @@ public class GameSceneManager : MonoBehaviour
 {
     private MainManager mainManager;
     private CSharpEventExample example;
+    private EnemyStateChange enemyStateChange;
 
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
         example = GetComponent<CSharpEventExample>();
+
+        enemyStateChange = GameObject.Find("Enemy").GetComponent<EnemyStateChange>();
 
         //•ÏXæ‚ÌƒV[ƒ“–¼‚ğİ’è
         mainManager.ChangeSceneName("GameOverScene");
@@ -30,5 +33,15 @@ public class GameSceneManager : MonoBehaviour
             mainManager.StartChangeScene();
         }
 #endif
+    }
+
+    private void FixedUpdate()
+    {
+        if(mainManager.IsChangeScene()) return;
+
+        if(enemyStateChange.IsClear())
+        {
+            mainManager.StartChangeScene();
+        }
     }
 }

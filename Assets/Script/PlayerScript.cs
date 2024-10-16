@@ -10,7 +10,7 @@ public class PlayerScript : MonoBehaviour
 
     private bool isShot;//¶¬‚Å‚«‚é‚©‚Ç‚¤‚©
     private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
-    private const float shotMaxTime = 10.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
+    private const float shotMaxTime = 5.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
 
     private HPScript hPScript;//HP
 

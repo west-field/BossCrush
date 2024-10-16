@@ -2,9 +2,71 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary> ƒz[ƒ~ƒ“ƒO’e </summary>
+/// <summary> ãƒ›ãƒ¼ãƒŸãƒ³ã‚°å¼¾ </summary>
 public class BulletHoming : BulletParent
 {
-    /*—U“±‰Â”\Šp“x‚Í30“x‚Ü‚Å
-     ”­ËŒã‚Íˆê’èŠÔŒã‚É‚Í—U“±‚ªØ‚ê‚é*/
+    private bool isHoming;//ãƒ›ãƒ¼ãƒŸãƒ³ã‚°ã§ãã‚‹ã‹
+    private float homingElapsedTime;//çµŒéæ™‚é–“
+    private const float homingMaxTime = 30.0f;//ãƒ›ãƒ¼ãƒŸãƒ³ã‚°ã§ãã‚‹æ™‚é–“
+
+    private Transform targetPos;
+
+    /// <summary> ç§»å‹•è§’åº¦ </summary>
+    float Direction
+    {
+        get { return Mathf.Atan2(GetComponent<Rigidbody2D>().velocity.y, GetComponent<Rigidbody2D>().velocity.x) * Mathf.Rad2Deg; }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        speed = 6.0f;
+
+        targetPos = GameObject.Find("Player").transform;
+        velocity = targetPos.position - this.transform.position;
+
+        isHoming = true;
+        homingElapsedTime = homingMaxTime;
+    }
+
+    protected override void Move()
+    {
+        if (isHoming)
+        {
+            homingElapsedTime--;
+            if (homingElapsedTime <= 0)
+            {
+                isHoming = false;
+                homingElapsedTime = homingMaxTime;
+                Debug.Log("ãƒ›ãƒ¼ãƒŸãƒ³ã‚°çµ‚ã‚ã‚Š");
+                return;
+            }
+
+            velocity = targetPos.position - this.transform.position;
+
+            var targetAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
+            // è§’åº¦å·®ã‚’æ±‚ã‚ã‚‹
+            var deltaAngle = Mathf.DeltaAngle(Direction, targetAngle);
+            Debug.Log(deltaAngle);
+            if (Mathf.Abs(deltaAngle) < 30.0f)
+            {
+                if(deltaAngle <= 0)
+                {
+                    deltaAngle = -30.0f;
+                }
+                else
+                {
+                    deltaAngle = 30.0f;
+                }
+            }
+            Debug.Log(deltaAngle);
+            var vx = Mathf.Cos(Mathf.Deg2Rad * deltaAngle);
+            var vy = Mathf.Sin(Mathf.Deg2Rad * deltaAngle);
+            velocity = new Vector3(vx, vy, 0.0f);
+
+        }
+
+        base.Move();
+    }
 }

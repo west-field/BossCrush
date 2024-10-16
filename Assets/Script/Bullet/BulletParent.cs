@@ -5,9 +5,9 @@ using UnityEngine;
 /// <summary> 弾の親クラス </summary>
 public class BulletParent : MonoBehaviour
 {
-    protected float speed;
-    protected Vector3 velocity;
-    protected SpriteRenderer spriteRenderer;
+    protected float speed;//移動速度
+    protected Vector3 velocity;//移動
+    protected SpriteRenderer spriteRenderer;//画面内にいるか判定を取る
 
     protected virtual void Start()
     {
@@ -32,5 +32,6 @@ public class BulletParent : MonoBehaviour
     protected virtual void Move()
     {
         //Debug.Log("弾の親クラスのMove");
+        this.transform.position += velocity * Time.deltaTime * speed;
     }
 }

@@ -35,11 +35,11 @@ public class EnemyStateChange : MonoBehaviour
 
     private bool isShot;//¶¬‚Å‚«‚é‚©‚Ç‚¤‚©
     private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
-    private const float shotMaxTime = 20.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
+    private const float shotMaxTime = 25.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
 
     private void Start()
     {
-        state = StateChange.RandomShot;
+        state = StateChange.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
     }

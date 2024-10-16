@@ -7,7 +7,7 @@ public class EnemyScript : MonoBehaviour
 {
     private HPScript hPScript;//HP
 
-    private Vector3 defaultPosition;//移動量
+    private Vector3 defaultPosition;//元の位置
     private float speed;//移動スピード
 
     [SerializeField] int maxHp = 50;
