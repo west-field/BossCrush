@@ -5,9 +5,7 @@ using UnityEngine;
 /// <summary> エネミーの状態変化 </summary>
 public class EnemyStateChange : MonoBehaviour
 {
-
-    //本体のライフが０になると消滅しゲームクリアとなる
-    private bool isClear;//クリア判定
+    private GameOverAndClearCheck clearCheck;
 
     /// <summary> ボスタイプ </summary>
     enum BossType
@@ -39,6 +37,8 @@ public class EnemyStateChange : MonoBehaviour
 
     private void Start()
     {
+        clearCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
+
         state = StateChange.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
@@ -46,12 +46,8 @@ public class EnemyStateChange : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(isClear)
+        if(clearCheck.IsClear())
         {
-            foreach (var enemy in enemyBosses)
-            {
-                Destroy(enemy);
-            }
             return;
         }
 
@@ -104,7 +100,7 @@ public class EnemyStateChange : MonoBehaviour
         switch(aliveNum)
         {
             case 0:
-                isClear = true;
+                clearCheck.Clear();
                 break;
             case 1:
                 state = StateChange.HomingShot;
@@ -119,14 +115,13 @@ public class EnemyStateChange : MonoBehaviour
         //本体のライフが0になるとクリア
         if(enemyBosses[(int)BossType.Main].GetComponent<EnemyScript>().GetHPScript().IsDead())
         {
-            isClear = true;
-        }
-    }
+            clearCheck.Clear();
 
-    /// <summary> クリア判定かどうか </summary>
-    /// <returns>true:クリア false:まだクリアではない</returns>
-    public bool IsClear()
-    {
-        return isClear;
+            //削除
+            foreach (var enemy in enemyBosses)
+            {
+                Destroy(enemy);
+            }
+        }
     }
 }

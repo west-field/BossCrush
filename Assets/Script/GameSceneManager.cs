@@ -5,42 +5,31 @@ using UnityEngine;
 public class GameSceneManager : MonoBehaviour
 {
     private MainManager mainManager;
-    private CSharpEventExample example;
-    private EnemyStateChange enemyStateChange;
+    private GameOverAndClearCheck gameOverAndClearCheck;
 
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
-        example = GetComponent<CSharpEventExample>();
 
-        enemyStateChange = GameObject.Find("Enemy").GetComponent<EnemyStateChange>();
+        gameOverAndClearCheck = GetComponent<GameOverAndClearCheck>();
 
         //変更先のシーン名を設定
         mainManager.ChangeSceneName("GameOverScene");
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         //シーンを変更しているときは判定を行わないように
         if (mainManager.IsChangeScene()) return;
 
-
-#if UNITY_EDITOR
-        //決定ボタンを押したとき
-        if (example.IsSubmit())
+        if(gameOverAndClearCheck.IsClear())
         {
-            //シーンを変更する
+            mainManager.ChangeSceneName("GameClearScene");
             mainManager.StartChangeScene();
         }
-#endif
-    }
-
-    private void FixedUpdate()
-    {
-        if(mainManager.IsChangeScene()) return;
-
-        if(enemyStateChange.IsClear())
+        else if(gameOverAndClearCheck.IsGameOver())
         {
+            mainManager.ChangeSceneName("GameOverScene");
             mainManager.StartChangeScene();
         }
     }

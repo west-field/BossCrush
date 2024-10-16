@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour
 {
+    private GameOverAndClearCheck gameOverCheck;
     private CSharpEventExample example;//ボタンの判定
-    private GameObject bulletPrefab;//真っ直ぐ動く弾のプレハブ
+    [SerializeField] private GameObject bulletPrefab;//真っ直ぐ動く弾のプレハブ
     private float speed;//移動スピード
 
     private bool isShot;//生成できるかどうか
@@ -14,16 +15,21 @@ public class PlayerScript : MonoBehaviour
 
     private HPScript hPScript;//HP
 
+    private const int bombMaxNum = 3;
+    private int bombNum;
+
     private void Start()
     {
+        gameOverCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
         example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
-        bulletPrefab = (GameObject)Resources.Load("BulletStraight");
         speed = 4.0f;
         isShot = true;
         shotElapsedTime = 0.0f;
 
         hPScript = new HPScript();
         hPScript.Init(3);
+
+        bombNum = bombMaxNum;
     }
 
     private void Update()
@@ -32,6 +38,7 @@ public class PlayerScript : MonoBehaviour
         {
             //ボムを使うと画面内の敵弾をすべて消すことができる
             Debug.Log("ボムを使うと画面内の敵弾をすべて消すことができる");
+            Bomb();
         }
     }
 
@@ -84,6 +91,22 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    /// <summary> ボム  敵が生成した弾をすべて削除する </summary>
+    private void Bomb()
+    {
+        if(bombNum > 0)
+        {
+            bombNum--;
+            //敵が生成した弾のゲームオブジェクトをすべて取得する
+            var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
+
+            foreach (var obj in objs)
+            {
+                Destroy(obj);
+            }
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //エネミーが発射した弾に当たった時
@@ -91,12 +114,20 @@ public class PlayerScript : MonoBehaviour
         {
             hPScript.Damage();
             Destroy(collision.gameObject);
+            if (hPScript.IsDead())
+            {
+                gameOverCheck.GameOver();
+            }
         }
 
         //エネミーに接触した時
         if(collision.transform.tag == "Enemy")
         {
             hPScript.Damage();
+            if(hPScript.IsDead())
+            {
+                gameOverCheck.GameOver();
+            }
         }
     }
 }
