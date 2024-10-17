@@ -51,7 +51,7 @@ public class EnemyStateChange : MonoBehaviour
     {
         clearCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
 
-        state = StateChange.TargetShot;
+        state = StateChange.HomingShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
 
@@ -65,19 +65,19 @@ public class EnemyStateChange : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(isEntry)
+        {
+            Entry();
+            return;
+        }
+
         if(clearCheck.IsClear())
         {
             return;
         }
 
         //è„â∫Ç…à⁄ìÆÇ∑ÇÈ
-        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time) * speed + defaultPosition.y, defaultPosition.z);
-
-        if (isEntry)
-        {
-            Entry();
-            return;
-        }
+        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time - entryElapsedTime) * speed + defaultPosition.y, defaultPosition.z);
 
         CheckAlive();
 
@@ -150,12 +150,13 @@ public class EnemyStateChange : MonoBehaviour
                 clearCheck.Clear();
                 break;
             case 1:
-                state = StateChange.HomingShot;
-                break;
-            case 2:
                 state = StateChange.RandomShot;
                 break;
+            case 2:
+                state = StateChange.TargetShot;
+                break;
             default:
+                state = StateChange.HomingShot;
                 break;
         }
 
