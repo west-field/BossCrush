@@ -23,6 +23,12 @@ public class PlayerScript : MonoBehaviour
     private int bombNum;
     private ScoreManager score;
 
+    /*サウンド*/
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip shot;
+    [SerializeField] private AudioClip damage;
+    [SerializeField] private AudioClip bomb;
+
     /*もう一度左から出てくる*/
     private bool isInvincible;//無敵時間中かどうか
     private float invincibleElapsedTime;//無敵経過時間
@@ -45,6 +51,8 @@ public class PlayerScript : MonoBehaviour
 
         bombNum = bombMaxNum;
         score = GameObject.Find("Manager").GetComponent<ScoreManager>();
+
+        audioSource = GetComponent<AudioSource>();
 
         isInvincible = true;
         invincibleElapsedTime = invincibleMaxTime;
@@ -101,6 +109,7 @@ public class PlayerScript : MonoBehaviour
                 Debug.Log("弾を生成");
                 Instantiate(bulletPrefab, this.transform.position, Quaternion.identity);
                 isShot = false;
+                audioSource.PlayOneShot(shot);
             }
         }
 
@@ -126,6 +135,7 @@ public class PlayerScript : MonoBehaviour
             if (bombNum > 0)
             {
                 bombNum--;
+                audioSource.PlayOneShot(bomb);
 
                 //敵が生成した弾のゲームオブジェクトをすべて取得する
                 var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
@@ -141,6 +151,7 @@ public class PlayerScript : MonoBehaviour
         }
         else
         {
+            audioSource.PlayOneShot(bomb);
             //敵が生成した弾のゲームオブジェクトをすべて取得する
             var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
 
@@ -203,6 +214,7 @@ public class PlayerScript : MonoBehaviour
     {
         //エフェクトを作成
         Instantiate(effector, this.transform.position, Quaternion.identity);
+        audioSource.PlayOneShot(damage);
 
         hPScript.Damage();
 
