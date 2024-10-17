@@ -16,6 +16,6 @@ public class BulletTarget : BulletParent
         velocity = player.transform.position - this.transform.position;
         velocity.Normalize();
 
-        GetComponent<Score>().SetScore(200);
+        GetComponent<Score>().SetScore(150);
     }
 }

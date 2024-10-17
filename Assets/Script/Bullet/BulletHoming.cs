@@ -26,7 +26,7 @@ public class BulletHoming : BulletParent
         targetPos = GameObject.Find("Player").transform;
         velocity = targetPos.position - this.transform.position;
 
-        GetComponent<Score>().SetScore(600);
+        GetComponent<Score>().SetScore(550);
 
         isHoming = true;
         homingElapsedTime = homingMaxTime;

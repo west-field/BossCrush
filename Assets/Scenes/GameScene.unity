@@ -317,8 +317,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5826e85b7e9e61408e88cc6659cb03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
-  score: 2000
+  maxHp: 300
+  score: 3000
+  damage: {fileID: 8300000, guid: 56697f74df3afbc4b899773e50ac37a8, type: 3}
 --- !u!1 &281430890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,8 +1003,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5826e85b7e9e61408e88cc6659cb03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 50
-  score: 1000
+  maxHp: 80
+  score: 1500
+  damage: {fileID: 8300000, guid: 56697f74df3afbc4b899773e50ac37a8, type: 3}
 --- !u!1 &1089677867
 GameObject:
   m_ObjectHideFlags: 0
@@ -1220,6 +1222,7 @@ GameObject:
   - component: {fileID: 1188177333}
   - component: {fileID: 1188177334}
   - component: {fileID: 1188177335}
+  - component: {fileID: 1188177336}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1319,7 +1322,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1188177329}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1480,6 +1483,41 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!58 &1188177336
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1188177329}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.1
 --- !u!1 &1278350640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1780,8 +1818,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5826e85b7e9e61408e88cc6659cb03a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 50
-  score: 1000
+  maxHp: 80
+  score: 1500
+  damage: {fileID: 8300000, guid: 56697f74df3afbc4b899773e50ac37a8, type: 3}
 --- !u!1 &1570191259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1809,7 +1848,7 @@ Transform:
   m_GameObject: {fileID: 1570191259}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.91, y: 0, z: 0}
+  m_LocalPosition: {x: 15, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1832,16 +1871,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyBosses:
   - {fileID: 1344778732}
-  - {fileID: 128960692}
   - {fileID: 1077050649}
+  - {fileID: 128960692}
   bulletPrefabs:
   - {fileID: 4971747660019092727, guid: 31e2ba32a9f857941a892a204c1561b4, type: 3}
   - {fileID: 3776273071103060848, guid: 9ec2af8a94161b84ba7ba3e246dde5de, type: 3}
   - {fileID: 7615851068222559673, guid: cf8efd293f8b7304084dd069bec5cdd5, type: 3}
   bulletStartPosition:
   - {fileID: 846022143}
-  - {fileID: 1946896028}
   - {fileID: 1306480309}
+  - {fileID: 1946896028}
+  - {fileID: 0}
+  - {fileID: 0}
+  shot: {fileID: 8300000, guid: f21355074b438cc45aaf9934ce0fc237, type: 3}
 --- !u!82 &1570191262
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1853,7 +1895,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

@@ -11,8 +11,8 @@ public class EnemyStateChange : MonoBehaviour
     enum BossType
     {
         Top,
-        Main,
         Under,
+        Main,
         Max
     }
 
@@ -25,8 +25,8 @@ public class EnemyStateChange : MonoBehaviour
         Max
     }
 
-
     [SerializeField] private GameObject[] enemyBosses;
+    /*弾を発射する*/
     [SerializeField] private GameObject[] bulletPrefabs;
     [SerializeField] private Transform[] bulletStartPosition;//弾を発射する位置
     private StateChange state;
@@ -38,6 +38,15 @@ public class EnemyStateChange : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private AudioClip shot;
 
+    /*上下に移動*/
+    private Vector3 defaultPosition;//元の位置
+    private float speed;//移動スピード
+
+    /*登場*/
+    private bool isEntry;
+    private float entryElapsedTime;//エントリー経過時間
+    private const float entryMaxTime = 80.0f;//エントリー時間
+
     private void Start()
     {
         clearCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
@@ -47,6 +56,11 @@ public class EnemyStateChange : MonoBehaviour
         shotElapsedTime = shotMaxTime;
 
         audioSource = GetComponent<AudioSource>();
+
+        speed = 1.0f;
+
+        isEntry = true;
+        entryElapsedTime = entryMaxTime;
     }
 
     private void FixedUpdate()
@@ -56,9 +70,35 @@ public class EnemyStateChange : MonoBehaviour
             return;
         }
 
+        //上下に移動する
+        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time) * speed + defaultPosition.y, defaultPosition.z);
+
+        if (isEntry)
+        {
+            Entry();
+            return;
+        }
+
         CheckAlive();
 
         Shot();
+    }
+
+    /// <summary> エントリー </summary>
+    private void Entry()
+    {
+        entryElapsedTime--;
+
+        //左から右に出てくる
+        this.transform.position -= new Vector3(0.1f, 0.0f, 0.0f);
+
+        //経過時間が 0 になったら
+        if (entryElapsedTime <= 0.0f)
+        {
+            defaultPosition = this.transform.position;
+            entryElapsedTime = entryMaxTime;
+            isEntry = false;
+        }
     }
 
     /// <summary> 攻撃 </summary>
@@ -72,10 +112,8 @@ public class EnemyStateChange : MonoBehaviour
                 if (enemyBosses[i].GetComponent<EnemyScript>().GetHPScript().IsDead())
                 {
                     //何もしない
-                    Debug.Log(enemyBosses[i].name);
                     continue;
                 }
-
                 //弾を生成
                 Instantiate(bulletPrefabs[(int)state], bulletStartPosition[i].position, Quaternion.identity);
             }

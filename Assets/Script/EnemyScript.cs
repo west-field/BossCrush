@@ -7,9 +7,6 @@ public class EnemyScript : MonoBehaviour
 {
     private HPScript hPScript;//HP
 
-    private Vector3 defaultPosition;//元の位置
-    private float speed;//移動スピード
-
     [SerializeField] int maxHp = 50;
     [SerializeField] int score = 1000;
     private ScoreManager scoreManager;
@@ -22,18 +19,9 @@ public class EnemyScript : MonoBehaviour
         hPScript = new HPScript();
         hPScript.Init(maxHp);
 
-        defaultPosition = this.transform.position;
-        speed = 1.5f;
-
         scoreManager = GameObject.Find("Manager").GetComponent<ScoreManager>();
 
         audioSource = transform.parent.GetComponent<AudioSource>();
-    }
-
-    private void FixedUpdate()
-    {
-        //上下に移動する
-        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time) * speed + defaultPosition.y, defaultPosition.z);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
