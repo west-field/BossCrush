@@ -9,6 +9,8 @@ public class BulletParent : MonoBehaviour
     protected Vector3 velocity;//ˆÚ“®
     protected SpriteRenderer spriteRenderer;//‰æ–Ê“à‚É‚¢‚é‚©”»’è‚ğæ‚é
 
+    protected Vector3 dir;//Œü‚«‚½‚¢•ûŒü
+
     protected virtual void Start()
     {
         speed = 1.0f;
@@ -31,7 +33,9 @@ public class BulletParent : MonoBehaviour
     /// <summary> ˆÚ“®ˆ— </summary>
     protected virtual void Move()
     {
-        //Debug.Log("’e‚ÌeƒNƒ‰ƒX‚ÌMove");
+        //Œü‚«‚½‚¢•ûŒü‚É‰ñ“]
+        this.transform.rotation = Quaternion.FromToRotation(Vector3.right, dir);
+        //ˆÚ“®
         this.transform.position += velocity * Time.deltaTime * speed;
     }
 }

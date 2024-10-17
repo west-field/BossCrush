@@ -15,6 +15,9 @@ public class BulletRandom : BulletParent
 
         velocity = Quaternion.AngleAxis(random, new Vector3(0, 0, 1)) * new Vector3(-1, 0, 0);
 
+        var nextPos = velocity * speed + this.transform.position;
+        dir = nextPos - this.transform.position;
+
         GetComponent<Score>().SetScore(350);
     }
 }
