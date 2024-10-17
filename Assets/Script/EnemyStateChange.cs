@@ -61,17 +61,20 @@ public class EnemyStateChange : MonoBehaviour
     {
         if(isShot)
         {
-            var i = 0;
-            foreach (var enemy in enemyBosses)
+            for (int i = 0; i < enemyBosses.Length; i++)
             {
-                if (enemy.GetComponent<EnemyScript>().GetHPScript().IsDead())
+                //•”ˆÊ‚ª¶‚«‚Ä‚¢‚È‚¢‚Æ‚«‚Í
+                if (enemyBosses[i].GetComponent<EnemyScript>().GetHPScript().IsDead())
                 {
+                    //‰½‚à‚µ‚È‚¢
+                    Debug.Log(enemyBosses[i].name);
                     continue;
                 }
 
+                //’e‚ğ¶¬
                 Instantiate(bulletPrefabs[(int)state], bulletStartPosition[i].position, Quaternion.identity);
-                i++;
             }
+
             isShot = false;
         }
         else
