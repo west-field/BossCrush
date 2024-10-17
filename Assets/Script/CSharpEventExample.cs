@@ -67,7 +67,7 @@ public class CSharpEventExample : MonoBehaviour
         var axis = context.ReadValue<Vector2>();
 
         axis.Normalize();
-        Debug.Log(axis);
+        //Debug.Log(axis);
 
         //ˆÚ“®‘¬“x‚ğ•Û
         velocity = new Vector3(axis.x, axis.y, 0.0f);

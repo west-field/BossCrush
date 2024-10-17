@@ -23,7 +23,7 @@ public class BulletParent : MonoBehaviour
         //弾が画面外に出たら削除する
         if(!spriteRenderer.isVisible)
         {
-            Debug.Log("画面外");
+            //Debug.Log("画面外");
             Destroy(this.gameObject);
         }
     }

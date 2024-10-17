@@ -49,7 +49,7 @@ public class BulletHoming : BulletParent
             var targetAngle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
             // 角度差を求める
             var deltaAngle = Mathf.DeltaAngle(Direction, targetAngle);
-            Debug.Log(deltaAngle);
+            //Debug.Log(deltaAngle);
             if (Mathf.Abs(deltaAngle) < 30.0f)
             {
                 if(deltaAngle <= 0)
