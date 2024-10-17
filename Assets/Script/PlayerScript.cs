@@ -29,6 +29,7 @@ public class PlayerScript : MonoBehaviour
     private const float invincibleMaxTime = 30.0f;//無敵時間
     private Renderer myRenderer;//自身の画像を見えなくする
     private Renderer shield;//シールドの画像を見えなくする
+    [SerializeField] private ParticleSystem effector;
 
     private void Start()
     {
@@ -200,6 +201,9 @@ public class PlayerScript : MonoBehaviour
     /// <summary> ダメージを受けたときの処理 </summary>
     private void Damage()
     {
+        //エフェクトを作成
+        Instantiate(effector, this.transform.position, Quaternion.identity);
+
         hPScript.Damage();
 
         Bomb(false);//敵の弾を削除する
