@@ -7,25 +7,21 @@ using UnityEngine.SceneManagement;
 /// <summary> メインマネージャー </summary>
 public class MainManager : MonoBehaviour
 {
-    /// <summary> フェードパネル </summary>
-    [SerializeField] private GameObject fadePanel;
+    /*フェードインアウト*/
+    [SerializeField] private GameObject fadePanel;//フェードパネル
+    private Image fadePanelImageAlpha;//フェードパネルの透明度を変える 
+    private float fadePanelAlpha;//フェードパネルのα値 
+    private float fadeSpeed;//フェードスピード 
+    private bool isFadeIn;//フェードインフラグ 
+    private bool isFadeOut;//フェードアウトフラグ 
 
-    /// <summary> フェードパネルの透明度を変える </summary>
-    private Image fadePanelImageAlpha;
+    /*シーン変更*/
+    private string nextSceneName;//次のシーン名 
 
-    /// <summary> フェードパネルのα値 </summary>
-    private float fadePanelAlpha;
-
-    /// <summary> フェードスピード </summary>
-    private float fadeSpeed;
-
-    /// <summary> フェードインフラグ </summary>
-    private bool isFadeIn;
-    /// <summary> フェードアウトフラグ </summary>
-    private bool isFadeOut;
-
-    /// <summary> 次のシーン名 </summary>
-    private string nextSceneName;
+    /*サウンド*/
+    private AudioSource audioSource;//音をフェードさせる
+    private float sourceFadeSpeed;
+    private const float sourceVolume = 1;
 
     private void Start()
     {
@@ -43,6 +39,10 @@ public class MainManager : MonoBehaviour
         isFadeOut = false;
 
         nextSceneName = "TitleScene";
+
+        audioSource = GetComponent<AudioSource>();
+        audioSource.volume = 0;//音量を0に
+        sourceFadeSpeed = fadeSpeed / sourceVolume;
     }
 
 
@@ -67,6 +67,12 @@ public class MainManager : MonoBehaviour
         color.a = fadePanelAlpha;
         fadePanelImageAlpha.color = color;
 
+        //音量を変更する
+        if(audioSource.volume < sourceVolume)
+        {
+            audioSource.volume += sourceFadeSpeed;
+        }
+
         if(fadePanelAlpha <= 0.0f)
         {
             //フェードインを終わる
@@ -83,6 +89,12 @@ public class MainManager : MonoBehaviour
         var color = fadePanelImageAlpha.color;
         color.a = fadePanelAlpha;
         fadePanelImageAlpha.color = color;
+
+        //音量を変更する
+        if (audioSource.volume > 0)
+        {
+            audioSource.volume -= sourceFadeSpeed;
+        }
 
         if (fadePanelAlpha >= 1.0f)
         {
