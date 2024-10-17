@@ -35,6 +35,9 @@ public class EnemyStateChange : MonoBehaviour
     private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
     private const float shotMaxTime = 25.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip shot;
+
     private void Start()
     {
         clearCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
@@ -42,6 +45,8 @@ public class EnemyStateChange : MonoBehaviour
         state = StateChange.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void FixedUpdate()
@@ -75,6 +80,7 @@ public class EnemyStateChange : MonoBehaviour
                 Instantiate(bulletPrefabs[(int)state], bulletStartPosition[i].position, Quaternion.identity);
             }
 
+            audioSource.PlayOneShot(shot);
             isShot = false;
         }
         else
