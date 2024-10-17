@@ -7,10 +7,13 @@ public class PlayerScript : MonoBehaviour
     private GameOverAndClearCheck gameOverCheck;
     private CSharpEventExample example;//ボタンの判定
 
+    /*移動*/
+    private float speed;//移動スピード
+    private Vector3 velocity;//移動量
+    private Vector3 screenLeftBottom;
+    private Vector3 screenRightTop;
     /*弾*/
     [SerializeField] private GameObject bulletPrefab;//真っ直ぐ動く弾のプレハブ
-    private float speed;//移動スピード
-
     private bool isShot;//生成できるかどうか
     private float shotElapsedTime;//攻撃した後の経過時間
     private const float shotMaxTime = 5.0f;//次攻撃ができるまでの時間
@@ -41,7 +44,9 @@ public class PlayerScript : MonoBehaviour
     {
         gameOverCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
         example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
+
         speed = 4.0f;
+        velocity = Vector2.zero;
 
         isShot = true;
         shotElapsedTime = 0.0f;
@@ -60,6 +65,9 @@ public class PlayerScript : MonoBehaviour
         myRenderer = GetComponent<Renderer>();
         myRenderer.enabled = false;
         shield = transform.GetChild(0).gameObject.GetComponent<Renderer>();
+
+        screenLeftBottom = Camera.main.ScreenToWorldPoint(Vector3.zero);//左下
+        screenRightTop = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0.0f));//左下
     }
 
     private void Update()
@@ -87,13 +95,17 @@ public class PlayerScript : MonoBehaviour
 
         if (example.IsMove())
         {
-            this.transform.position += example.GetVelocity() * Time.deltaTime * speed;
+            velocity = example.GetVelocity() * Time.deltaTime * speed;
+            this.transform.position = new Vector3(Mathf.Clamp(transform.position.x + velocity.x, screenLeftBottom.x, screenRightTop.x), Mathf.Clamp(transform.position.y + velocity.y, screenLeftBottom.y, screenRightTop.y), 0.0f);
         }
 
         //低速になる
         if (example.IsSlow())
         {
-            this.transform.position -= example.GetVelocity() * Time.deltaTime * speed * 0.5f;
+            //this.transform.position -= example.GetVelocity() * Time.deltaTime * speed * 0.5f;
+
+            velocity = example.GetVelocity() * Time.deltaTime * speed * 0.5f;
+            this.transform.position = new Vector3(Mathf.Clamp(transform.position.x - velocity.x, screenLeftBottom.x, screenRightTop.x), Mathf.Clamp(transform.position.y - velocity.y, screenLeftBottom.y, screenRightTop.y), 0.0f);
         }
 
         Shot();
