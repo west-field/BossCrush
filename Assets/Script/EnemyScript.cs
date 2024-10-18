@@ -5,12 +5,15 @@ using UnityEngine;
 /// <summary> エネミー </summary>
 public class EnemyScript : MonoBehaviour
 {
+    /*HP*/
     private HPScript hPScript;//HP
-
     [SerializeField] int maxHp = 50;
+    /*HPBar*/
+    private HPBar hpBar;
+    /*スコア*/
     [SerializeField] int score = 1000;
     private ScoreManager scoreManager;
-
+    /*サウンド*/
     private AudioSource audioSource;
     [SerializeField] private AudioClip damage;
 
@@ -22,6 +25,8 @@ public class EnemyScript : MonoBehaviour
         scoreManager = GameObject.Find("Manager").GetComponent<ScoreManager>();
 
         audioSource = transform.parent.GetComponent<AudioSource>();
+
+        hpBar = transform.GetComponentInChildren<HPBar>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -34,7 +39,9 @@ public class EnemyScript : MonoBehaviour
             if (hPScript.IsDead()) return;
 
             hPScript.Damage();
-            if(hPScript.IsDead())
+            hpBar.HPToSlider(hPScript.GetHp(), maxHp);
+
+            if (hPScript.IsDead())
             {
                 //色を変更する
                 this.GetComponent<SpriteRenderer>().color = Color.gray;
