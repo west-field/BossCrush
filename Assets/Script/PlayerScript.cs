@@ -5,39 +5,42 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour
 {
     private GameOverAndClearCheck gameOverCheck;
-    private CSharpEventExample example;//ƒ{ƒ^ƒ“‚Ì”»’è
+    private CSharpEventExample example;//ãƒœã‚¿ãƒ³ã®åˆ¤å®š
 
-    /*ˆÚ“®*/
-    private float speed;//ˆÚ“®ƒXƒs[ƒh
-    private Vector3 velocity;//ˆÚ“®—Ê
+    /*ç§»å‹•*/
+    private float speed;//ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰
+    private Vector3 velocity;//ç§»å‹•é‡
     private Vector3 screenLeftBottom;
     private Vector3 screenRightTop;
-    /*’e*/
-    [SerializeField] private GameObject bulletPrefab;//^‚Á’¼‚®“®‚­’e‚ÌƒvƒŒƒnƒu
-    private bool isShot;//¶¬‚Å‚«‚é‚©‚Ç‚¤‚©
-    private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
-    private const float shotMaxTime = 5.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
+    /*å¼¾*/
+    [SerializeField] private GameObject bulletPrefab;//çœŸã£ç›´ãå‹•ãå¼¾ã®ãƒ—ãƒ¬ãƒãƒ–
+    private bool isShot;//ç”Ÿæˆã§ãã‚‹ã‹ã©ã†ã‹
+    private float shotElapsedTime;//æ”»æ’ƒã—ãŸå¾Œã®çµŒéæ™‚é–“
+    private const float shotMaxTime = 5.0f;//æ¬¡æ”»æ’ƒãŒã§ãã‚‹ã¾ã§ã®æ™‚é–“
 
     /*HP*/
     private HPScript hpScript;//HP
+    private const int kHpMax = 3;
+    [SerializeField] private GameObject hpCanvas;
+    private GameObject[] hpSprite;
 
-    /*ƒ{ƒ€*/
+    /*ãƒœãƒ */
     private const int bombMaxNum = 3;
     private int bombNum;
     private ScoreManager score;
 
-    /*ƒTƒEƒ“ƒh*/
+    /*ã‚µã‚¦ãƒ³ãƒ‰*/
     private AudioSource audioSource;
     [SerializeField] private AudioClip shot;
     [SerializeField] private AudioClip damage;
     [SerializeField] private AudioClip bomb;
 
-    /*‚à‚¤ˆê“x¶‚©‚ço‚Ä‚­‚é*/
-    private bool isInvincible;//–³“GŠÔ’†‚©‚Ç‚¤‚©
-    private float invincibleElapsedTime;//–³“GŒo‰ßŠÔ
-    private const float invincibleMaxTime = 30.0f;//–³“GŠÔ
-    private Renderer myRenderer;//©g‚Ì‰æ‘œ‚ğŒ©‚¦‚È‚­‚·‚é
-    private Renderer shield;//ƒV[ƒ‹ƒh‚Ì‰æ‘œ‚ğŒ©‚¦‚È‚­‚·‚é
+    /*ã‚‚ã†ä¸€åº¦å·¦ã‹ã‚‰å‡ºã¦ãã‚‹*/
+    private bool isInvincible;//ç„¡æ•µæ™‚é–“ä¸­ã‹ã©ã†ã‹
+    private float invincibleElapsedTime;//ç„¡æ•µçµŒéæ™‚é–“
+    private const float invincibleMaxTime = 30.0f;//ç„¡æ•µæ™‚é–“
+    private Renderer myRenderer;//è‡ªèº«ã®ç”»åƒã‚’è¦‹ãˆãªãã™ã‚‹
+    private Renderer shield;//ã‚·ãƒ¼ãƒ«ãƒ‰ã®ç”»åƒã‚’è¦‹ãˆãªãã™ã‚‹
     [SerializeField] private ParticleSystem effector;
 
     private void Start()
@@ -52,7 +55,16 @@ public class PlayerScript : MonoBehaviour
         shotElapsedTime = 0.0f;
 
         hpScript = new HPScript();
-        hpScript.Init(3);
+        hpScript.Init(kHpMax);
+
+        var hpCanvasChildren = hpCanvas.transform.childCount;
+        hpSprite = new GameObject[hpCanvasChildren];
+        for (int i = 0; i < hpCanvasChildren; i++)
+        {
+            var child = hpCanvas.transform.GetChild(i).transform.GetChild(0).gameObject;
+            hpSprite[i] = child;
+            hpSprite[i].gameObject.SetActive(false);
+        }
 
         bombNum = bombMaxNum;
         score = GameObject.Find("Manager").GetComponent<ScoreManager>();
@@ -66,13 +78,13 @@ public class PlayerScript : MonoBehaviour
         myRenderer.enabled = false;
         shield = transform.GetChild(0).gameObject.GetComponent<Renderer>();
 
-        screenLeftBottom = Camera.main.ScreenToWorldPoint(Vector3.zero);//¶‰º
-        screenRightTop = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0.0f));//¶‰º
+        screenLeftBottom = Camera.main.ScreenToWorldPoint(Vector3.zero);//å·¦ä¸‹
+        screenRightTop = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0.0f));//å·¦ä¸‹
     }
 
     private void Update()
     {
-        //ƒ{ƒ€‚ğg‚¤‚Æ‰æ–Ê“à‚Ì“G’e‚ğ‚·‚×‚ÄÁ‚·‚±‚Æ‚ª‚Å‚«‚é
+        //ãƒœãƒ ã‚’ä½¿ã†ã¨ç”»é¢å†…ã®æ•µå¼¾ã‚’ã™ã¹ã¦æ¶ˆã™ã“ã¨ãŒã§ãã‚‹
         if (example.IsBomb())
         {
             Bomb();
@@ -83,7 +95,7 @@ public class PlayerScript : MonoBehaviour
     {
         if(hpScript.IsDead())
         {
-            Debug.Log("€‚ñ‚¾");
+            Debug.Log("æ­»ã‚“ã ");
             return;
         }
 
@@ -99,7 +111,7 @@ public class PlayerScript : MonoBehaviour
             this.transform.position = new Vector3(Mathf.Clamp(transform.position.x + velocity.x, screenLeftBottom.x, screenRightTop.x), Mathf.Clamp(transform.position.y + velocity.y, screenLeftBottom.y, screenRightTop.y), 0.0f);
         }
 
-        //’á‘¬‚É‚È‚é
+        //ä½é€Ÿã«ãªã‚‹
         if (example.IsSlow())
         {
             //this.transform.position -= example.GetVelocity() * Time.deltaTime * speed * 0.5f;
@@ -111,35 +123,35 @@ public class PlayerScript : MonoBehaviour
         Shot();
     }
 
-    /// <summary> UŒ‚ˆ— </summary>
+    /// <summary> æ”»æ’ƒå‡¦ç† </summary>
     private void Shot()
     {
         if (example.IsShot())
         {
             if (isShot)
             {
-                //Debug.Log("’e‚ğ¶¬");
+                //Debug.Log("å¼¾ã‚’ç”Ÿæˆ");
                 Instantiate(bulletPrefab, this.transform.position, Quaternion.identity);
                 isShot = false;
                 audioSource.PlayOneShot(shot);
             }
         }
 
-        //‚Ü‚¾UŒ‚‚Å‚«‚È‚¢‚Æ‚«
+        //ã¾ã æ”»æ’ƒã§ããªã„ã¨ã
         if (!isShot)
         {
             shotElapsedTime--;
 
-            //Œo‰ßŠÔ‚ª 0 ‚É‚È‚Á‚½‚ç
+            //çµŒéæ™‚é–“ãŒ 0 ã«ãªã£ãŸã‚‰
             if (shotElapsedTime <= 0.0f)
             {
                 shotElapsedTime = shotMaxTime;
-                isShot = true;//UŒ‚‚Å‚«‚é‚æ‚¤‚É
+                isShot = true;//æ”»æ’ƒã§ãã‚‹ã‚ˆã†ã«
             }
         }
     }
 
-    /// <summary> ƒ{ƒ€  “G‚ª¶¬‚µ‚½’e‚ğ‚·‚×‚Äíœ‚·‚é </summary>
+    /// <summary> ãƒœãƒ   æ•µãŒç”Ÿæˆã—ãŸå¼¾ã‚’ã™ã¹ã¦å‰Šé™¤ã™ã‚‹ </summary>
     private void Bomb()
     {
         if (bombNum > 0)
@@ -147,12 +159,12 @@ public class PlayerScript : MonoBehaviour
             bombNum--;
             audioSource.PlayOneShot(bomb);
 
-            //“G‚ª¶¬‚µ‚½’e‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ğ‚·‚×‚Äæ“¾‚·‚é
+            //æ•µãŒç”Ÿæˆã—ãŸå¼¾ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã™ã¹ã¦å–å¾—ã™ã‚‹
             var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
 
             foreach (var obj in objs)
             {
-                //“¾“_‚ğæ“¾‚·‚é
+                //å¾—ç‚¹ã‚’å–å¾—ã™ã‚‹
                 score.AddScore(obj.GetComponent<Score>().GetScore());
 
                 Destroy(obj);
@@ -160,22 +172,23 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    /// <summary> •œŠˆ </summary>
+    /// <summary> å¾©æ´» </summary>
     private void StartAgain()
     {
         if(!myRenderer.enabled)
         {
             myRenderer.enabled = true;
             shield.enabled = true;
+            hpCanvas.SetActive(true);
             this.transform.position = new Vector3(-10.0f, 0.0f, 0.0f);
         }
 
         invincibleElapsedTime--;
 
-        //‰æ–Ê¶‚©‚ç‰E‚ÖˆÚ“®‚·‚é
+        //ç”»é¢å·¦ã‹ã‚‰å³ã¸ç§»å‹•ã™ã‚‹
         this.transform.position += new Vector3(0.1f, 0.0f, 0.0f);
 
-        //Œo‰ßŠÔ‚ª 0 ‚É‚È‚Á‚½‚ç
+        //çµŒéæ™‚é–“ãŒ 0 ã«ãªã£ãŸã‚‰
         if (invincibleElapsedTime <= 0.0f)
         {
             invincibleElapsedTime = invincibleMaxTime;
@@ -186,45 +199,60 @@ public class PlayerScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //ƒGƒlƒ~[‚ª”­Ë‚µ‚½’e‚É“–‚½‚Á‚½
+        //ã‚¨ãƒãƒŸãƒ¼ãŒç™ºå°„ã—ãŸå¼¾ã«å½“ãŸã£ãŸæ™‚
         if(collision.transform.tag == "EnemyBullet")
         {
             Destroy(collision.gameObject);
 
-            //–³“GŠÔ‚Ì‚ÍUŒ‚‚ğó‚¯‚È‚¢‚æ‚¤‚É
+            //ç„¡æ•µæ™‚é–“ã®æ™‚ã¯æ”»æ’ƒã‚’å—ã‘ãªã„ã‚ˆã†ã«
             if (isInvincible) return;
 
             Damage();
         }
 
-        //–³“GŠÔ‚Ì‚ÍUŒ‚‚ğó‚¯‚È‚¢‚æ‚¤‚É
+        //ç„¡æ•µæ™‚é–“ã®æ™‚ã¯æ”»æ’ƒã‚’å—ã‘ãªã„ã‚ˆã†ã«
         if (isInvincible) return;
 
-        //ƒGƒlƒ~[‚ÉÚG‚µ‚½
+        //ã‚¨ãƒãƒŸãƒ¼ã«æ¥è§¦ã—ãŸæ™‚
         if (collision.transform.tag == "Enemy")
         {
             Damage();
         }
     }
 
-    /// <summary> ƒ_ƒ[ƒW‚ğó‚¯‚½‚Æ‚«‚Ìˆ— </summary>
+    /// <summary> ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸã¨ãã®å‡¦ç† </summary>
     private void Damage()
     {
-        //ƒGƒtƒFƒNƒg‚ğì¬
+        //ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
         Instantiate(effector, this.transform.position, Quaternion.identity);
         audioSource.PlayOneShot(damage);
 
         hpScript.Damage();
 
-        //©•ª‚Ì’e‚ğíœ‚·‚é
+        var eraseNum = kHpMax - hpScript.GetHp();
+        Debug.Log(eraseNum);
+        //HPè¡¨ç¤ºã‚’å¤‰ãˆã‚‹
+        for (int i = 0; i < hpSprite.Length; i++)
+        {
+            if(i < eraseNum)
+            {
+                Debug.Log("æ¶ˆã™");
+                if(!hpSprite[i].gameObject.activeSelf)
+                {
+                    hpSprite[i].gameObject.SetActive(true);
+                }
+            }
+        }
+
+        //è‡ªåˆ†ã®å¼¾ã‚’å‰Šé™¤ã™ã‚‹
         var objs = GameObject.FindGameObjectsWithTag("PlayerBullet");
         foreach (var obj in objs)
         {
             Destroy(obj);
         }
 
-        //“G‚Ì’e‚ğíœ‚·‚é
-        //“G‚ª¶¬‚µ‚½’e‚ÌƒQ[ƒ€ƒIƒuƒWƒFƒNƒg‚ğ‚·‚×‚Äæ“¾‚·‚é
+        //æ•µã®å¼¾ã‚’å‰Šé™¤ã™ã‚‹
+        //æ•µãŒç”Ÿæˆã—ãŸå¼¾ã®ã‚²ãƒ¼ãƒ ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã™ã¹ã¦å–å¾—ã™ã‚‹
         objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
         foreach (var obj in objs)
         {
@@ -233,6 +261,7 @@ public class PlayerScript : MonoBehaviour
 
         isInvincible = true;
         myRenderer.enabled = false;
+        hpCanvas.SetActive(false);
 
         if (hpScript.IsDead())
         {
