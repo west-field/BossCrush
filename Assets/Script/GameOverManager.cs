@@ -1,16 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameOverManager : MonoBehaviour
 {
     private MainManager mainManager;
     private CSharpEventExample example;
 
+    /*スコア*/
+    private WriteReadToCSV scoreData;
+    [SerializeField] private TextMeshProUGUI scoreText;
+
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
         example = GetComponent<CSharpEventExample>();
+
+        scoreData = GetComponent<WriteReadToCSV>();
+        scoreData.ReadDataToCSV();
+        var data = scoreData.Data();
+        var score = data[0];
+        scoreText.text = score[0];
 
         //変更先のシーン名を設定
         mainManager.ChangeSceneName("TitleScene");
