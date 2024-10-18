@@ -19,7 +19,7 @@ public class PlayerScript : MonoBehaviour
     private const float shotMaxTime = 5.0f;//次攻撃ができるまでの時間
 
     /*HP*/
-    private HPScript hPScript;//HP
+    private HPScript hpScript;//HP
 
     /*ボム*/
     private const int bombMaxNum = 3;
@@ -51,8 +51,8 @@ public class PlayerScript : MonoBehaviour
         isShot = true;
         shotElapsedTime = 0.0f;
 
-        hPScript = new HPScript();
-        hPScript.Init(3);
+        hpScript = new HPScript();
+        hpScript.Init(3);
 
         bombNum = bombMaxNum;
         score = GameObject.Find("Manager").GetComponent<ScoreManager>();
@@ -75,13 +75,13 @@ public class PlayerScript : MonoBehaviour
         //ボムを使うと画面内の敵弾をすべて消すことができる
         if (example.IsBomb())
         {
-            Bomb(true);
+            Bomb();
         }
     }
 
     private void FixedUpdate()
     {
-        if(hPScript.IsDead())
+        if(hpScript.IsDead())
         {
             Debug.Log("死んだ");
             return;
@@ -118,7 +118,7 @@ public class PlayerScript : MonoBehaviour
         {
             if (isShot)
             {
-                Debug.Log("弾を生成");
+                //Debug.Log("弾を生成");
                 Instantiate(bulletPrefab, this.transform.position, Quaternion.identity);
                 isShot = false;
                 audioSource.PlayOneShot(shot);
@@ -140,35 +140,21 @@ public class PlayerScript : MonoBehaviour
     }
 
     /// <summary> ボム  敵が生成した弾をすべて削除する </summary>
-    private void Bomb(bool isButton)
+    private void Bomb()
     {
-        if(isButton)
+        if (bombNum > 0)
         {
-            if (bombNum > 0)
-            {
-                bombNum--;
-                audioSource.PlayOneShot(bomb);
-
-                //敵が生成した弾のゲームオブジェクトをすべて取得する
-                var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
-
-                foreach (var obj in objs)
-                {
-                    //得点を取得する
-                    score.AddScore(obj.GetComponent<Score>().GetScore());
-
-                    Destroy(obj);
-                }
-            }
-        }
-        else
-        {
+            bombNum--;
             audioSource.PlayOneShot(bomb);
+
             //敵が生成した弾のゲームオブジェクトをすべて取得する
             var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
 
             foreach (var obj in objs)
             {
+                //得点を取得する
+                score.AddScore(obj.GetComponent<Score>().GetScore());
+
                 Destroy(obj);
             }
         }
@@ -228,13 +214,27 @@ public class PlayerScript : MonoBehaviour
         Instantiate(effector, this.transform.position, Quaternion.identity);
         audioSource.PlayOneShot(damage);
 
-        hPScript.Damage();
+        hpScript.Damage();
 
-        Bomb(false);//敵の弾を削除する
+        //自分の弾を削除する
+        var objs = GameObject.FindGameObjectsWithTag("PlayerBullet");
+        foreach (var obj in objs)
+        {
+            Destroy(obj);
+        }
+
+        //敵の弾を削除する
+        //敵が生成した弾のゲームオブジェクトをすべて取得する
+        objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        foreach (var obj in objs)
+        {
+            Destroy(obj);
+        }
+
         isInvincible = true;
         myRenderer.enabled = false;
 
-        if (hPScript.IsDead())
+        if (hpScript.IsDead())
         {
             gameOverCheck.GameOver();
         }

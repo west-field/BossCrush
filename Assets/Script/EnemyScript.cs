@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
     /*HP*/
-    private HPScript hPScript;//HP
+    private HPScript hpScript;//HP
     [SerializeField] int maxHp = 50;
     /*HPBar*/
     private HPBar hpBar;
@@ -19,8 +19,8 @@ public class EnemyScript : MonoBehaviour
 
     private void Start()
     {
-        hPScript = new HPScript();
-        hPScript.Init(maxHp);
+        hpScript = new HPScript();
+        hpScript.Init(maxHp);
 
         scoreManager = GameObject.Find("Manager").GetComponent<ScoreManager>();
 
@@ -36,12 +36,12 @@ public class EnemyScript : MonoBehaviour
         {
             Destroy(collision.gameObject);
 
-            if (hPScript.IsDead()) return;
+            if (hpScript.IsDead()) return;
 
-            hPScript.Damage();
-            hpBar.HPToSlider(hPScript.GetHp(), maxHp);
+            hpScript.Damage();
+            hpBar.HPToSlider(hpScript.GetHp(), maxHp);
 
-            if (hPScript.IsDead())
+            if (hpScript.IsDead())
             {
                 //êFÇïœçXÇ∑ÇÈ
                 this.GetComponent<SpriteRenderer>().color = Color.gray;
@@ -57,6 +57,6 @@ public class EnemyScript : MonoBehaviour
     /// <returns>HPScript</returns>
     public HPScript GetHPScript()
     {
-        return hPScript;
+        return hpScript;
     }
 }
