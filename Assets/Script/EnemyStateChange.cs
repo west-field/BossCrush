@@ -51,7 +51,7 @@ public class EnemyStateChange : MonoBehaviour
     {
         clearCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
 
-        state = StateChange.HomingShot;
+        state = StateChange.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
 
@@ -150,13 +150,13 @@ public class EnemyStateChange : MonoBehaviour
                 clearCheck.Clear();
                 break;
             case 1:
-                state = StateChange.RandomShot;
+                state = StateChange.HomingShot;
                 break;
             case 2:
-                state = StateChange.TargetShot;
+                state = StateChange.RandomShot;
                 break;
             default:
-                state = StateChange.HomingShot;
+                state = StateChange.TargetShot;
                 break;
         }
 
@@ -165,10 +165,9 @@ public class EnemyStateChange : MonoBehaviour
         {
             clearCheck.Clear();
 
-            //çÌèú
             foreach (var enemy in enemyBosses)
             {
-                Destroy(enemy);
+                enemyBosses[(int)BossType.Main].GetComponent<EnemyScript>().ColorChange();
             }
         }
     }
