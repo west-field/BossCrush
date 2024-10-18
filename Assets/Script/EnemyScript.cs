@@ -16,6 +16,8 @@ public class EnemyScript : MonoBehaviour
     /*サウンド*/
     private AudioSource audioSource;
     [SerializeField] private AudioClip damage;
+    /*エフェクト*/
+    [SerializeField] private ParticleSystem deathEffect;
 
     private void Start()
     {
@@ -44,13 +46,20 @@ public class EnemyScript : MonoBehaviour
             if (hpScript.IsDead())
             {
                 //色を変更する
-                this.GetComponent<SpriteRenderer>().color = Color.gray;
+                ColorChange();
+                deathEffect.Play();
                 scoreManager.AddScore(score);
                 audioSource.PlayOneShot(damage);
                 //this.GetComponent<BoxCollider2D>().enabled = false;
                 return;
             }
         }
+    }
+
+    /// <summary> 色を変える </summary>
+    public void ColorChange()
+    {
+        this.GetComponent<SpriteRenderer>().color = Color.gray;
     }
 
     /// <summary> HPのスクリプトを取得 </summary>
