@@ -29,5 +29,13 @@ public class TitleManager : MonoBehaviour
             //シーンを変更する
             mainManager.StartChangeScene();
         }
+
+        //何かのボタンを押したとき
+        if(Input.anyKey)
+        {
+            Debug.Log("シーンを変更する");
+            //シーンを変更する
+            mainManager.StartChangeScene();
+        }
     }
 }
