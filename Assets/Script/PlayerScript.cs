@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -28,6 +29,13 @@ public class PlayerScript : MonoBehaviour
     private const int bombMaxNum = 3;
     private int bombNum;
     private ScoreManager score;
+    [SerializeField] private Image bombFade;
+    private const float bombFadeMaxTime = 20.0f;
+    private float bombFadeAlpha;
+    private const float bombFadeAlphaMax = 0.7f;
+    private float bombFadeAlphaSpeed;
+    private float bombFadeElapsedTime;//経過時間
+    private bool isBombFade;
 
     /*サウンド*/
     private AudioSource audioSource;
@@ -68,6 +76,11 @@ public class PlayerScript : MonoBehaviour
 
         bombNum = bombMaxNum;
         score = GameObject.Find("Manager").GetComponent<ScoreManager>();
+        bombFadeElapsedTime = bombFadeMaxTime;
+        bombFadeAlpha = bombFadeAlphaMax;
+        bombFadeAlphaSpeed = bombFadeAlphaMax / bombFadeMaxTime;
+        bombFade.enabled = false;
+        isBombFade = false;
 
         audioSource = GetComponent<AudioSource>();
 
@@ -87,15 +100,40 @@ public class PlayerScript : MonoBehaviour
         //ボムを使うと画面内の敵弾をすべて消すことができる
         if (example.IsBomb())
         {
+            if (isBombFade) return;
             Bomb();
         }
     }
 
     private void FixedUpdate()
     {
+        if(isBombFade)
+        {
+            bombFadeElapsedTime--;
+            bombFadeAlpha -= bombFadeAlphaSpeed;
+
+            var white = bombFade.color;
+            white.a = bombFadeAlpha;
+            bombFade.color = white;
+            
+            
+            if(bombFadeElapsedTime <= 0)
+            {
+                isBombFade = false;
+                bombFade.enabled = false;
+            }
+        }
+
         if(hpScript.IsDead())
         {
             Debug.Log("死んだ");
+            return;
+        }
+
+        if(gameOverCheck.IsClear())
+        {
+            GameObject.Find("Manager").GetComponent<ScoreManager>().AddScore(hpScript.GetHp() * 10000);
+            hpScript.Damage(kHpMax);
             return;
         }
 
@@ -156,6 +194,11 @@ public class PlayerScript : MonoBehaviour
     {
         if (bombNum > 0)
         {
+            bombFadeElapsedTime = bombFadeMaxTime;
+            bombFadeAlpha = bombFadeAlphaMax;
+            bombFade.enabled = true;
+            isBombFade = true;
+
             bombNum--;
             audioSource.PlayOneShot(bomb);
 
@@ -202,12 +245,8 @@ public class PlayerScript : MonoBehaviour
         //エネミーが発射した弾に当たった時
         if(collision.transform.tag == "EnemyBullet")
         {
+            Damage(collision.gameObject.GetComponent<BulletParent>().AttackPower());
             Destroy(collision.gameObject);
-
-            //無敵時間の時は攻撃を受けないように
-            if (isInvincible) return;
-
-            Damage();
         }
 
         //無敵時間の時は攻撃を受けないように
@@ -216,18 +255,21 @@ public class PlayerScript : MonoBehaviour
         //エネミーに接触した時
         if (collision.transform.tag == "Enemy")
         {
-            Damage();
+            Damage(1);
         }
     }
 
     /// <summary> ダメージを受けたときの処理 </summary>
-    private void Damage()
+    private void Damage(int damagePower)
     {
+        //無敵時間の時は攻撃を受けないように
+        if (isInvincible) return;
+
         //エフェクトを作成
         Instantiate(effector, this.transform.position, Quaternion.identity);
         audioSource.PlayOneShot(damage);
 
-        hpScript.Damage();
+        hpScript.Damage(damagePower);
 
         var eraseNum = kHpMax - hpScript.GetHp();
         Debug.Log(eraseNum);
@@ -237,8 +279,9 @@ public class PlayerScript : MonoBehaviour
             if(i < eraseNum)
             {
                 Debug.Log("消す");
-                if(!hpSprite[i].gameObject.activeSelf)
+                if (!hpSprite[i].gameObject.activeSelf)
                 {
+                    Debug.Log("消した");
                     hpSprite[i].gameObject.SetActive(true);
                 }
             }
