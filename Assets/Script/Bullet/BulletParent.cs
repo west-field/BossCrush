@@ -11,11 +11,14 @@ public class BulletParent : MonoBehaviour
 
     protected Vector3 dir;//Œü‚«‚½‚¢•ûŒü
 
+    protected int attackPower;//UŒ‚—Í
+
     protected virtual void Start()
     {
         speed = 1.0f;
         velocity = Vector3.zero;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        attackPower = 1;
     }
 
     private void FixedUpdate()
@@ -37,5 +40,11 @@ public class BulletParent : MonoBehaviour
         this.transform.rotation = Quaternion.FromToRotation(Vector3.right, dir);
         //ˆÚ“®
         this.transform.position += velocity * Time.deltaTime * speed;
+    }
+
+    /// <summary> UŒ‚—Í‚ğæ“¾ </summary>
+    public int AttackPower()
+    {
+        return attackPower;
     }
 }

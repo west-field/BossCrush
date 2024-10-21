@@ -22,9 +22,9 @@ public class HPScript
     }
 
     /// <summary> ƒ_ƒ[ƒW‚ğó‚¯‚½hp‚ğŒ¸‚ç‚· </summary>
-    public void Damage()
+    public void Damage(int damage)
     {
-        hp--;
+        hp -= damage;
 
         if(hp <= 0)
         {

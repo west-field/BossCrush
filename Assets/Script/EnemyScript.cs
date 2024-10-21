@@ -36,11 +36,12 @@ public class EnemyScript : MonoBehaviour
         //ÉvÉåÉCÉÑÅ[Ç™î≠éÀÇµÇΩíeÇ…ìñÇΩÇ¡ÇΩéû
         if (collision.transform.tag == "PlayerBullet")
         {
+            var damagePower = collision.gameObject.GetComponent<BulletParent>().AttackPower();
             Destroy(collision.gameObject);
 
             if (hpScript.IsDead()) return;
 
-            hpScript.Damage();
+            hpScript.Damage(damagePower);
             hpBar.HPToSlider(hpScript.GetHp(), maxHp);
 
             if (hpScript.IsDead())
