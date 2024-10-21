@@ -6,14 +6,14 @@ using UnityEngine;
 public class TitleManager : MonoBehaviour
 {
     private MainManager mainManager;
-    private CSharpEventExample example;
+    private UpdateExample updateExample;
 
     [SerializeField] private AudioSource audioSource;//決定音を再生する
 
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
-        example = GetComponent<CSharpEventExample>();
+        updateExample = GetComponent<UpdateExample>();
 
         //変更先のシーン名を設定
         mainManager.ChangeSceneName("GameScene");
@@ -25,7 +25,7 @@ public class TitleManager : MonoBehaviour
         if (mainManager.IsChangeScene()) return;
 
         //決定ボタンを押したとき
-        if(example.IsSubmit())
+        if(updateExample.OnTrigger(UpdateExample.ActionType.Submit))
         {
             audioSource.Play();
             Debug.Log("シーンを変更する");

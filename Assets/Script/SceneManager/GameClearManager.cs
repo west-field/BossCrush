@@ -6,7 +6,7 @@ using TMPro;
 public class GameClearManager : MonoBehaviour
 {
     private MainManager mainManager;
-    private CSharpEventExample example;
+    private UpdateExample updateExample;
 
     /*スコア*/
     private WriteReadToCSV scoreData;
@@ -18,7 +18,7 @@ public class GameClearManager : MonoBehaviour
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
-        example = GetComponent<CSharpEventExample>();
+        updateExample = GetComponent<UpdateExample>();
 
         scoreData = GetComponent<WriteReadToCSV>();
         scoreData.ReadDataToCSV();
@@ -38,7 +38,7 @@ public class GameClearManager : MonoBehaviour
         if (mainManager.IsChangeScene()) return;
 
         //決定ボタンを押したとき
-        if (example.IsSubmit())
+        if (updateExample.OnTrigger(UpdateExample.ActionType.Submit))
         {
             audioSource.Play();
             //シーンを変更する

@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class PlayerScript : MonoBehaviour
 {
     private GameOverAndClearCheck gameOverCheck;
-    private CSharpEventExample example;//ボタンの判定
+    private UpdateExample updateExample;//ボタンの判定
+
+    private bool isPause;
 
     /*移動*/
     private float speed;//移動スピード
@@ -54,7 +56,10 @@ public class PlayerScript : MonoBehaviour
     private void Start()
     {
         gameOverCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
-        example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
+        //example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
+        updateExample = GameObject.Find("Manager").GetComponent<UpdateExample>();
+
+        isPause = false;
 
         speed = 4.0f;
         velocity = Vector2.zero;
@@ -97,8 +102,24 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
+        if (isPause)
+        {
+            if(updateExample.OnTrigger(UpdateExample.ActionType.Pause))
+            {
+                isPause = false;
+                Time.timeScale = 1;
+            }
+            return;
+        }
+        else if(updateExample.OnTrigger(UpdateExample.ActionType.Pause))
+        {
+            isPause = true;
+            Time.timeScale = 0;
+            return;
+        }
+
         //ボムを使うと画面内の敵弾をすべて消すことができる
-        if (example.IsBomb())
+        if (updateExample.OnTrigger(UpdateExample.ActionType.Bomb))
         {
             if (isBombFade) return;
             Bomb();
@@ -143,18 +164,16 @@ public class PlayerScript : MonoBehaviour
             return;
         }
 
-        if (example.IsMove())
+        if(updateExample.OnPressed(UpdateExample.ActionType.Move))
         {
-            velocity = example.GetVelocity() * Time.deltaTime * speed;
+            velocity = updateExample.GetVelocity() * Time.deltaTime * speed;
             this.transform.position = new Vector3(Mathf.Clamp(transform.position.x + velocity.x, screenLeftBottom.x, screenRightTop.x), Mathf.Clamp(transform.position.y + velocity.y, screenLeftBottom.y, screenRightTop.y), 0.0f);
         }
 
         //低速になる
-        if (example.IsSlow())
+        if (updateExample.OnPressed(UpdateExample.ActionType.Slow))
         {
-            //this.transform.position -= example.GetVelocity() * Time.deltaTime * speed * 0.5f;
-
-            velocity = example.GetVelocity() * Time.deltaTime * speed * 0.5f;
+            velocity = updateExample.GetVelocity() * Time.deltaTime * speed * 0.5f;
             this.transform.position = new Vector3(Mathf.Clamp(transform.position.x - velocity.x, screenLeftBottom.x, screenRightTop.x), Mathf.Clamp(transform.position.y - velocity.y, screenLeftBottom.y, screenRightTop.y), 0.0f);
         }
 
@@ -164,7 +183,7 @@ public class PlayerScript : MonoBehaviour
     /// <summary> 攻撃処理 </summary>
     private void Shot()
     {
-        if (example.IsShot())
+        if (updateExample.OnPressed(UpdateExample.ActionType.Shot))
         {
             if (isShot)
             {
@@ -201,6 +220,8 @@ public class PlayerScript : MonoBehaviour
 
             bombNum--;
             audioSource.PlayOneShot(bomb);
+
+            Debug.Log(bombNum + "個");
 
             //敵が生成した弾のゲームオブジェクトをすべて取得する
             var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
