@@ -6,7 +6,8 @@ BossCrush(ボスクラッシュ)
 
 Unity var.2022.3.23f1 LTS
 
-初めにFont.zipを展開してください。
+初めにAssets->Font->Font.zipを展開して、
+Assets->Fontにおいてください。
 
 # ゲームについて
 2D横スクロールボスシューティングゲーム
