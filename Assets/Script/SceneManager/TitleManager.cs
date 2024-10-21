@@ -8,6 +8,8 @@ public class TitleManager : MonoBehaviour
     private MainManager mainManager;
     private CSharpEventExample example;
 
+    [SerializeField] private AudioSource audioSource;//決定音を再生する
+
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
@@ -25,14 +27,7 @@ public class TitleManager : MonoBehaviour
         //決定ボタンを押したとき
         if(example.IsSubmit())
         {
-            Debug.Log("シーンを変更する");
-            //シーンを変更する
-            mainManager.StartChangeScene();
-        }
-
-        //何かのボタンを押したとき
-        if(Input.anyKey)
-        {
+            audioSource.Play();
             Debug.Log("シーンを変更する");
             //シーンを変更する
             mainManager.StartChangeScene();

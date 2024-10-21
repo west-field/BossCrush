@@ -13,6 +13,8 @@ public class GameClearManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
 
+    [SerializeField] private AudioSource audioSource;//決定音を再生する
+
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
@@ -38,6 +40,7 @@ public class GameClearManager : MonoBehaviour
         //決定ボタンを押したとき
         if (example.IsSubmit())
         {
+            audioSource.Play();
             //シーンを変更する
             mainManager.StartChangeScene();
         }
