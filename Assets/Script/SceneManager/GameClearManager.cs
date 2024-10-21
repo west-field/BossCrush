@@ -11,6 +11,7 @@ public class GameClearManager : MonoBehaviour
     /*スコア*/
     private WriteReadToCSV scoreData;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
 
     private void Start()
     {
@@ -22,6 +23,8 @@ public class GameClearManager : MonoBehaviour
         var data = scoreData.Data();
         var score = data[0];
         scoreText.text = score[0];
+        score = data[1];
+        highScoreText.text = score[0];
 
         //変更先のシーン名を設定
         mainManager.ChangeSceneName("TitleScene");
