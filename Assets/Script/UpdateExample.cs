@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class UpdateExample : MonoBehaviour
 {
+    /// <summary> アクションのタイプ </summary>
     public enum ActionType
     {
         Move,
@@ -19,7 +20,7 @@ public class UpdateExample : MonoBehaviour
         Max
     }
 
-    private InputActionMap inputActionMap;
+    private InputActionMap inputActionMap;//アクションを取得するため
 
     private void Awake()
     {
@@ -31,6 +32,9 @@ public class UpdateExample : MonoBehaviour
 
     }
 
+    /// <summary> 押している間 </summary>
+    /// <param name="actionType">UpdateExample.ActionType.取得したいアクションタイプ</param>
+    /// <returns></returns>
     public bool OnPressed(ActionType actionType)
     {
         if(inputActionMap == null) return false;
@@ -42,6 +46,9 @@ public class UpdateExample : MonoBehaviour
         return false;
     }
 
+    /// <summary> 押したとき </summary>
+    /// <param name="actionType">UpdateExample.ActionType.取得したいアクションタイプ</param>
+    /// <returns></returns>
     public bool OnTrigger(ActionType actionType)
     {
         if (inputActionMap == null) return false;
@@ -78,22 +85,6 @@ public class UpdateExample : MonoBehaviour
         if (OnTrigger(ActionType.Cancel))
         {
             Debug.Log("★キャンセルが押されました★");
-        }
-    }
-
-    private void FixedUpdate()
-    {
-        if(OnPressed(ActionType.Move))
-        {
-            Debug.Log("★★移動が押されています★★");
-        }
-        if (OnPressed(ActionType.Shot))
-        {
-            Debug.Log("★★ショットが押されています★★");
-        }
-        if (OnPressed(ActionType.Slow))
-        {
-            Debug.Log("★★スローが押されています★★");
         }
     }
 }

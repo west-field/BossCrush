@@ -50,22 +50,29 @@ public class BulletHoming : BulletParent
             // 角度差を求める
             var deltaAngle = Mathf.DeltaAngle(Direction, targetAngle);
 
-            if (Mathf.Abs(deltaAngle) < 30.0f)
+            var angle = Mathf.Abs(deltaAngle) - 180.0f;
+            Debug.Log(deltaAngle + "    "+ Mathf.Abs(deltaAngle) + "- 180.0f =" + angle + "< 30.0f");
+
+            if (Mathf.Abs(deltaAngle) - 180.0f > 30.0f ||
+                Mathf.Abs(deltaAngle) - 180.0f < -30.0f)
             {
-                if(deltaAngle <= 0)
+                if (deltaAngle <= 0)
                 {
-                    deltaAngle = -30.0f;
+                    deltaAngle = -180.0f + 30.0f;
                 }
                 else
                 {
-                    deltaAngle = 30.0f;
+                    deltaAngle = 180.0f - 30.0f;
                 }
             }
+
+            Debug.Log(deltaAngle);
 
             var vx = Mathf.Cos(Mathf.Deg2Rad * deltaAngle);
             var vy = Mathf.Sin(Mathf.Deg2Rad * deltaAngle);
             velocity = new Vector3(vx, vy, 0.0f);
 
+            dir = (this.transform.position + velocity) - this.transform.position;
         }
 
         base.Move();
