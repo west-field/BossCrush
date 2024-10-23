@@ -744,7 +744,7 @@ GameObject:
   - component: {fileID: 7923808085208350654}
   - component: {fileID: 4932103979957625165}
   m_Layer: 5
-  m_Name: FullScreenChange
+  m_Name: WindowChange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -797,7 +797,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Full Screen Change
+  m_text: Window Mode Change
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6b022ff98cc142f429e17bd3df0faf81, type: 2}
   m_sharedMaterial: {fileID: 2485630551398883930, guid: 6b022ff98cc142f429e17bd3df0faf81, type: 2}
@@ -824,7 +824,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 6.8
+  m_fontSize: 6.4
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
