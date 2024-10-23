@@ -51,8 +51,7 @@ public class EnemyStateChange : MonoBehaviour
     {
         clearCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
 
-        //state = StateChange.TargetShot;
-        state = StateChange.HomingShot;
+        state = StateChange.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
 
@@ -117,7 +116,6 @@ public class EnemyStateChange : MonoBehaviour
                 }
                 //íeÇê∂ê¨
                 Instantiate(bulletPrefabs[(int)state], bulletStartPosition[i].position, Quaternion.identity);
-                break;
             }
 
             audioSource.PlayOneShot(shot);
