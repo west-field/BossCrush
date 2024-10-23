@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary> エネミーの状態変化 </summary>
 public class EnemyStateChange : MonoBehaviour
 {
-    private GameOverAndClearCheck clearCheck;
+    private GameFlagCheck clearCheck;
 
     /// <summary> ボスタイプ </summary>
     enum BossType
@@ -49,7 +49,7 @@ public class EnemyStateChange : MonoBehaviour
 
     private void Start()
     {
-        clearCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
+        clearCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
 
         //state = StateChange.TargetShot;
         state = StateChange.HomingShot;

@@ -5,10 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
-    private GameOverAndClearCheck gameOverCheck;
+    private GameFlagCheck gameOverCheck;
     private UpdateExample updateExample;//ボタンの判定
-
-    private bool isPause;
 
     /*移動*/
     private float speed;//移動スピード
@@ -55,11 +53,9 @@ public class PlayerScript : MonoBehaviour
 
     private void Start()
     {
-        gameOverCheck = GameObject.Find("Manager").GetComponent<GameOverAndClearCheck>();
+        gameOverCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
         //example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
         updateExample = GameObject.Find("Manager").GetComponent<UpdateExample>();
-
-        isPause = false;
 
         speed = 4.0f;
         velocity = Vector2.zero;
@@ -102,19 +98,8 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
-        if (isPause)
+        if (gameOverCheck.IsPause())
         {
-            if(updateExample.OnTrigger(UpdateExample.ActionType.Pause))
-            {
-                isPause = false;
-                Time.timeScale = 1;
-            }
-            return;
-        }
-        else if(updateExample.OnTrigger(UpdateExample.ActionType.Pause))
-        {
-            isPause = true;
-            Time.timeScale = 0;
             return;
         }
 

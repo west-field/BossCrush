@@ -5,29 +5,37 @@ using UnityEngine;
 public class GameSceneManager : MonoBehaviour
 {
     private MainManager mainManager;
-    private GameOverAndClearCheck gameOverAndClearCheck;
+    private UpdateExample updateExample;
+    private GameFlagCheck gameFlagCheck;
 
     private void Start()
     {
         mainManager = GetComponent<MainManager>();
-
-        gameOverAndClearCheck = GetComponent<GameOverAndClearCheck>();
+        updateExample = GetComponent<UpdateExample>();
+        gameFlagCheck = GetComponent<GameFlagCheck>();
 
         //変更先のシーン名を設定
         mainManager.ChangeSceneName("GameOverScene");
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         //シーンを変更しているときは判定を行わないように
         if (mainManager.IsChangeScene()) return;
 
-        if(gameOverAndClearCheck.IsClear())
+        if (gameFlagCheck.IsPause()) return;
+        if (updateExample.OnTrigger(UpdateExample.ActionType.Pause))
+        {
+            gameFlagCheck.Pause(true);
+            return;
+        }
+
+        if (gameFlagCheck.IsClear())
         {
             mainManager.ChangeSceneName("GameClearScene");
             mainManager.StartChangeScene();
         }
-        else if(gameOverAndClearCheck.IsGameOver())
+        else if(gameFlagCheck.IsGameOver())
         {
             mainManager.ChangeSceneName("GameOverScene");
             mainManager.StartChangeScene();

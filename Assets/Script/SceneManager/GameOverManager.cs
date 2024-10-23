@@ -7,6 +7,7 @@ public class GameOverManager : MonoBehaviour
 {
     private MainManager mainManager;
     private UpdateExample updateExample;
+    private GameFlagCheck gameFlagCheck;
 
     /*スコア*/
     private WriteReadToCSV scoreData;
@@ -19,6 +20,7 @@ public class GameOverManager : MonoBehaviour
     {
         mainManager = GetComponent<MainManager>();
         updateExample = GetComponent<UpdateExample>();
+        gameFlagCheck = GetComponent<GameFlagCheck>();
 
         scoreData = GetComponent<WriteReadToCSV>();
         scoreData.ReadDataToCSV();
@@ -37,12 +39,19 @@ public class GameOverManager : MonoBehaviour
         //シーンを変更しているときは判定を行わないように
         if (mainManager.IsChangeScene()) return;
 
+        if (gameFlagCheck.IsPause()) return;
+
         //決定ボタンを押したとき
         if (updateExample.OnTrigger(UpdateExample.ActionType.Submit))
         {
             audioSource.Play();
             //シーンを変更する
             mainManager.StartChangeScene();
+        }
+        else if (updateExample.OnTrigger(UpdateExample.ActionType.Pause))
+        {
+            gameFlagCheck.Pause(true);
+            return;
         }
     }
 }
