@@ -7,7 +7,7 @@ public class BulletHoming : BulletParent
 {
     private bool isHoming;//ホーミングできるか
     private float homingElapsedTime;//経過時間
-    private const float homingMaxTime = 30.0f;//ホーミングできる時間
+    private const float homingMaxTime = 60.0f;//ホーミングできる時間
 
     private Transform targetPos;//ホーミングする対象
 
@@ -24,8 +24,10 @@ public class BulletHoming : BulletParent
         speed = 6.0f;
 
         targetPos = GameObject.Find("Player").transform;
+
         MoveDirection(true);
 
+        //得点を設定
         GetComponent<Score>().SetScore(550);
 
         isHoming = true;
@@ -49,10 +51,8 @@ public class BulletHoming : BulletParent
             var targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             // 角度差を求める
             var deltaAngle = Mathf.DeltaAngle(Direction, targetAngle);
-
-            var angle = Mathf.Abs(deltaAngle) - 180.0f;
-            Debug.Log(deltaAngle + "    "+ Mathf.Abs(deltaAngle) + "- 180.0f =" + angle + "< 30.0f");
-
+            
+            //30度以上曲がらないように
             if (Mathf.Abs(deltaAngle) - 180.0f > 30.0f ||
                 Mathf.Abs(deltaAngle) - 180.0f < -30.0f)
             {
@@ -66,12 +66,12 @@ public class BulletHoming : BulletParent
                 }
             }
 
-            Debug.Log(deltaAngle);
-
+            //移動
             var vx = Mathf.Cos(Mathf.Deg2Rad * deltaAngle);
             var vy = Mathf.Sin(Mathf.Deg2Rad * deltaAngle);
             velocity = new Vector3(vx, vy, 0.0f);
 
+            //移動方向に回転
             dir = (this.transform.position + velocity) - this.transform.position;
         }
 

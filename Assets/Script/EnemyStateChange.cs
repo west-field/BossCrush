@@ -16,8 +16,8 @@ public class EnemyStateChange : MonoBehaviour
         Max
     }
 
-    /// <summary> ‚R’iŠK‚Ìó‘Ô•Ï‰»‚ğ‚Â </summary>
-    enum StateChange
+    /// <summary> 3í—Ş‚Ì’e‚ğŒ‚‚Â‚±‚Æ‚ª‚Å‚«‚é </summary>
+    enum BulletType
     {
         TargetShot,
         RandomShot,
@@ -28,9 +28,8 @@ public class EnemyStateChange : MonoBehaviour
     [SerializeField] private GameObject[] enemyBosses;
     /*’e‚ğ”­Ë‚·‚é*/
     [SerializeField] private GameObject[] bulletPrefabs;
-    private GameObject straightBulletPrefabs;
     [SerializeField] private Transform[] bulletStartPosition;//’e‚ğ”­Ë‚·‚éˆÊ’u
-    private StateChange state;
+    private BulletType state;
 
     private bool isShot;//¶¬‚Å‚«‚é‚©‚Ç‚¤‚©
     private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
@@ -56,9 +55,7 @@ public class EnemyStateChange : MonoBehaviour
     {
         clearCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
 
-        straightBulletPrefabs = Resources.Load<GameObject>("EnemyBulletStraight");
-
-        state = StateChange.TargetShot;
+        state = BulletType.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
 
@@ -146,7 +143,7 @@ public class EnemyStateChange : MonoBehaviour
             for (int i = 0; i < enemyBosses.Length; i++)
             {
                 //’e‚ğ¶¬
-                Instantiate(straightBulletPrefabs, bulletStartPosition[i].position, Quaternion.identity);
+                Instantiate(bulletPrefabs[(int)BulletType.RandomShot], bulletStartPosition[i].position, Quaternion.identity);
             }
 
             audioSource.PlayOneShot(shot);
@@ -181,10 +178,10 @@ public class EnemyStateChange : MonoBehaviour
                 clearCheck.Clear();
                 break;
             case 1:
-                state = StateChange.HomingShot;
+                state = BulletType.HomingShot;
                 break;
             case 2:
-                state = StateChange.RandomShot;
+                state = BulletType.RandomShot;
                 break;
             default:
                 break;

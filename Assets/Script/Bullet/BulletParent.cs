@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary> 弾の親クラス </summary>
@@ -9,14 +7,13 @@ public class BulletParent : MonoBehaviour
     protected Vector3 velocity;//移動
     protected SpriteRenderer spriteRenderer;//画面内にいるか判定を取る
 
-    protected Vector3 dir;//向きたい方向
+    protected Vector3 dir;//回転方向
 
     protected int attackPower;//攻撃力
 
     protected virtual void Start()
     {
         speed = 1.0f;
-        velocity = new Vector3(1.0f, 0.0f, 0.0f);
         spriteRenderer = GetComponent<SpriteRenderer>();
         dir = Vector3.zero;
         attackPower = 1;
@@ -29,7 +26,6 @@ public class BulletParent : MonoBehaviour
         //弾が画面外に出たら削除する
         if(!spriteRenderer.isVisible)
         {
-            //Debug.Log("画面外");
             Destroy(this.gameObject);
         }
     }
@@ -37,7 +33,7 @@ public class BulletParent : MonoBehaviour
     /// <summary> 移動処理 </summary>
     protected virtual void Move()
     {
-        //向きたい方向に回転
+        //進行方向へ回転
         this.transform.rotation = Quaternion.FromToRotation(Vector3.right, dir);
         //移動
         this.transform.position += velocity * Time.deltaTime * speed;
@@ -50,7 +46,7 @@ public class BulletParent : MonoBehaviour
     }
 
     /// <summary> 移動方向を決める </summary>
-    /// <param name="isLeft"></param>
+    /// <param name="isLeft">true:左方向へ移動する false:右方向へ移動する</param>
     public void MoveDirection(bool isLeft)
     {
         if(isLeft)

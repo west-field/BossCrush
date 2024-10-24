@@ -16,6 +16,7 @@ public class BulletTarget : BulletParent
         velocity = player.transform.position - this.transform.position;
         velocity.Normalize();
 
+        //ˆÚ“®•ûŒü‚É‰ñ“]
         var nextPos = velocity * speed + this.transform.position;
         dir = nextPos - this.transform.position;
 
