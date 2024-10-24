@@ -24,6 +24,10 @@ public class PlayerScript : MonoBehaviour
     private const int kHpMax = 3;
     [SerializeField] private GameObject hpCanvas;
     private GameObject[] hpSprite;
+    //一定時間以上止まっていたらHPを表示させる
+    private bool isHpDraw;
+    private float hpDrawElapsedTime;//経過時間
+    private const float kHpDrawMaxTime = 60.0f;//次表示ができるまでの時間
 
     /*ボム*/
     private const int kBombMaxNum = 3;
@@ -80,6 +84,9 @@ public class PlayerScript : MonoBehaviour
         }
 
         hpCanvas.SetActive(false);
+
+        isHpDraw = false;
+        hpDrawElapsedTime = 0;
 
         bombNum = kBombMaxNum;
         score = manager.GetComponent<ScoreManager>();
@@ -162,8 +169,11 @@ public class PlayerScript : MonoBehaviour
             //移動中はHPが見えないように
             if(hpCanvas.activeSelf)
             {
-                hpCanvas.SetActive(false);
+                isHpDraw = false;
+                hpCanvas.SetActive(isHpDraw);
             }
+
+            hpDrawElapsedTime = 0;
 
             //移動
             velocity = updateExample.GetVelocity() * Time.deltaTime * speed;
@@ -171,11 +181,21 @@ public class PlayerScript : MonoBehaviour
         }
         else
         {
-            //移動していないときははHPが見えるように
-            if (!hpCanvas.activeSelf)
+            if(!isHpDraw)
             {
-                hpCanvas.SetActive(true);
+                hpDrawElapsedTime++;
+                if (hpDrawElapsedTime >= kHpDrawMaxTime)
+                {
+                    isHpDraw = true;
+                    //移動していないときははHPが見えるように
+                    if (!hpCanvas.activeSelf)
+                    {
+                        hpCanvas.SetActive(isHpDraw);
+                    }
+                }
             }
+
+            
         }
 
         //低速になる
@@ -248,7 +268,8 @@ public class PlayerScript : MonoBehaviour
         {
             myRenderer.enabled = true;
             shield.enabled = true;
-            hpCanvas.SetActive(true);
+            isHpDraw = true;
+            hpCanvas.SetActive(isHpDraw);
             this.transform.position = new Vector3(-10.0f, 0.0f, 0.0f);
         }
 
@@ -291,7 +312,8 @@ public class PlayerScript : MonoBehaviour
         //無敵時間の時は攻撃を受けないように
         if (isEntry) return;
 
-        hpCanvas.SetActive(true);
+        isHpDraw = true;
+        hpCanvas.SetActive(isHpDraw);
 
         //エフェクトを作成
         Instantiate(effect, this.transform.position, Quaternion.identity);
@@ -336,7 +358,8 @@ public class PlayerScript : MonoBehaviour
         if (hpScript.IsDead())
         {
             gameFlagCheck.GameOver();
-            hpCanvas.SetActive(false);
+            isHpDraw = false;
+            hpCanvas.SetActive(isHpDraw);
         }
     }
 }
