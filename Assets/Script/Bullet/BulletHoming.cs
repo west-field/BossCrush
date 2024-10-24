@@ -24,7 +24,7 @@ public class BulletHoming : BulletParent
         speed = 6.0f;
 
         targetPos = GameObject.Find("Player").transform;
-        velocity = new Vector3(-1.0f, 0.0f, 0.0f);
+        MoveDirection(true);
 
         GetComponent<Score>().SetScore(550);
 

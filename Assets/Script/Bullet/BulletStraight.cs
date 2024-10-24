@@ -12,7 +12,6 @@ public class BulletStraight : BulletParent
         base.Start();
 
         speed = 10.0f;
-        velocity = new Vector3(1.0f, 0.0f, 0.0f);
 
         score = GameObject.Find("Manager").GetComponent<ScoreManager>();
     }

@@ -28,12 +28,17 @@ public class EnemyStateChange : MonoBehaviour
     [SerializeField] private GameObject[] enemyBosses;
     /*’e‚ğ”­Ë‚·‚é*/
     [SerializeField] private GameObject[] bulletPrefabs;
+    private GameObject straightBulletPrefabs;
     [SerializeField] private Transform[] bulletStartPosition;//’e‚ğ”­Ë‚·‚éˆÊ’u
     private StateChange state;
 
     private bool isShot;//¶¬‚Å‚«‚é‚©‚Ç‚¤‚©
     private float shotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
     private const float shotMaxTime = 25.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
+
+    private bool isStraightShot;//¶¬‚Å‚«‚é‚©‚Ç‚¤‚©
+    private float straightShotElapsedTime;//UŒ‚‚µ‚½Œã‚ÌŒo‰ßŠÔ
+    private const float straightShotMaxTime = 80.0f;//ŸUŒ‚‚ª‚Å‚«‚é‚Ü‚Å‚ÌŠÔ
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip shot;
@@ -51,9 +56,14 @@ public class EnemyStateChange : MonoBehaviour
     {
         clearCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
 
+        straightBulletPrefabs = Resources.Load<GameObject>("EnemyBulletStraight");
+
         state = StateChange.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
+
+        isStraightShot = true;
+        straightShotElapsedTime = straightShotMaxTime;
 
         audioSource = GetComponent<AudioSource>();
 
@@ -128,6 +138,27 @@ public class EnemyStateChange : MonoBehaviour
             {
                 isShot = true;
                 shotElapsedTime = shotMaxTime;
+            }
+        }
+
+        if(isStraightShot)
+        {
+            for (int i = 0; i < enemyBosses.Length; i++)
+            {
+                //’e‚ğ¶¬
+                Instantiate(straightBulletPrefabs, bulletStartPosition[i].position, Quaternion.identity);
+            }
+
+            audioSource.PlayOneShot(shot);
+            isStraightShot = false;
+        }
+        else
+        {
+            straightShotElapsedTime--;
+            if (straightShotElapsedTime <= 0)
+            {
+                isStraightShot = true;
+                straightShotElapsedTime = straightShotMaxTime;
             }
         }
     }

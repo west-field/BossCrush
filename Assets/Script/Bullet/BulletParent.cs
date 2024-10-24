@@ -16,8 +16,9 @@ public class BulletParent : MonoBehaviour
     protected virtual void Start()
     {
         speed = 1.0f;
-        velocity = Vector3.zero;
+        velocity = new Vector3(1.0f, 0.0f, 0.0f);
         spriteRenderer = GetComponent<SpriteRenderer>();
+        dir = Vector3.zero;
         attackPower = 1;
     }
 
@@ -46,5 +47,22 @@ public class BulletParent : MonoBehaviour
     public int AttackPower()
     {
         return attackPower;
+    }
+
+    /// <summary> ˆÚ“®•ûŒü‚ðŒˆ‚ß‚é </summary>
+    /// <param name="isLeft"></param>
+    public void MoveDirection(bool isLeft)
+    {
+        if(isLeft)
+        {
+            velocity = new Vector3(-1.0f, 0.0f, 0.0f);
+
+            var nextPos = velocity * speed + this.transform.position;
+            dir = nextPos - this.transform.position;
+        }
+        else
+        {
+            velocity = new Vector3(1.0f, 0.0f, 0.0f);
+        }
     }
 }
