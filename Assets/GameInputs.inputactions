@@ -117,7 +117,7 @@
                 {
                     "name": "",
                     "id": "d484d3a1-5a1f-4999-90db-960333cf6814",
-                    "path": "<Keyboard>/l",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -360,6 +360,17 @@
                     "name": "",
                     "id": "80e027b7-b4de-47e1-9f1b-ad0096792adf",
                     "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3992fce0-79da-4afb-8b15-7fad89099e75",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
