@@ -11,6 +11,8 @@ public class GameFlagCheck : MonoBehaviour
 
     private bool isFullScreen;//フルスクリーンモードに変更するか
 
+    private Object pauseObject;
+
     private void Start()
     {
         isClear = false;
@@ -62,10 +64,11 @@ public class GameFlagCheck : MonoBehaviour
         if(isPause)
         {
             Time.timeScale = 0;
-            Instantiate(Resources.Load("PauseCanvas"));
+            pauseObject = Instantiate(Resources.Load("PauseCanvas"));
         }
         else
         {
+            Destroy(pauseObject);
             Time.timeScale = 1.0f;
         }
     }
