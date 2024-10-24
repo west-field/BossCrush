@@ -28,7 +28,6 @@ public class TitleManager : MonoBehaviour
 
         if(gameFlagCheck.IsPause()) return;
 
-        //Œˆ’èƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½‚Æ‚«
         if(updateExample.OnTrigger(UpdateExample.ActionType.Submit))
         {
             audioSource.Play();

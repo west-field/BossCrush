@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary> ゲームオーバーマネージャー </summary>
 public class GameOverManager : MonoBehaviour
 {
     private MainManager mainManager;
@@ -10,7 +11,6 @@ public class GameOverManager : MonoBehaviour
     private GameFlagCheck gameFlagCheck;
 
     /*スコア*/
-    private WriteReadToCSV scoreData;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
 
@@ -22,11 +22,14 @@ public class GameOverManager : MonoBehaviour
         updateExample = GetComponent<UpdateExample>();
         gameFlagCheck = GetComponent<GameFlagCheck>();
 
-        scoreData = GetComponent<WriteReadToCSV>();
+        //スコアを取得する
+        var scoreData = GetComponent<WriteReadToCSV>();
         scoreData.ReadDataToCSV();
         var data = scoreData.Data();
+        //今回のスコア
         var score = data[0];
         scoreText.text = score[0];
+        //ハイスコア
         score = data[1];
         highScoreText.text = score[0];
 

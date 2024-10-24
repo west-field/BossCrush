@@ -22,11 +22,14 @@ public class GameClearManager : MonoBehaviour
         updateExample = GetComponent<UpdateExample>();
         gameFlagCheck = GetComponent<GameFlagCheck>();
 
+        //スコア
         scoreData = GetComponent<WriteReadToCSV>();
         scoreData.ReadDataToCSV();
         var data = scoreData.Data();
+        //今回のスコア
         var score = data[0];
         scoreText.text = score[0];
+        //ハイスコア
         score = data[1];
         highScoreText.text = score[0];
 

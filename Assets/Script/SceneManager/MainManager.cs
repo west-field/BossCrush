@@ -20,8 +20,8 @@ public class MainManager : MonoBehaviour
 
     /*サウンド*/
     private AudioSource audioSource;//音をフェードさせる
-    private float sourceFadeSpeed;
-    private const float sourceVolume = 1;
+    private float sourceFadeSpeed;//フェードスピード
+    private const float sourceVolume = 1;//最大音量
 
     private void Start()
     {
@@ -58,6 +58,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    /// <summary> フェードイン </summary>
     private void FadeIn()
     {
         //透明度を変更
@@ -81,6 +82,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    /// <summary> フェードアウト </summary>
     private void FadeOut()
     {
         //透明度を変更

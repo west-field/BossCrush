@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> ゲームシーンマネージャー </summary>
 public class GameSceneManager : MonoBehaviour
 {
     private MainManager mainManager;
@@ -24,6 +25,7 @@ public class GameSceneManager : MonoBehaviour
         if (mainManager.IsChangeScene()) return;
 
         if (gameFlagCheck.IsPause()) return;
+
         if (updateExample.OnTrigger(UpdateExample.ActionType.Pause))
         {
             gameFlagCheck.Pause(true);

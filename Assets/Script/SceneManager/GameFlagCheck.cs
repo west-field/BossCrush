@@ -2,23 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> ゲーム内で使用するフラグ </summary>
 public class GameFlagCheck : MonoBehaviour
 {
     private bool isClear;//クリア判定
     private bool isGameOver;//ゲームオーバー判定
 
     private bool isPause;//ポーズしているかどうか
+    private Object pauseObject;//ポーズオブジェクト
 
     private bool isFullScreen;//フルスクリーンモードに変更するか
-
-    private Object pauseObject;
 
     private void Start()
     {
         isClear = false;
         isGameOver = false;
         isPause = false;
-        isFullScreen = Screen.fullScreen;
+        pauseObject = null;
+        isFullScreen = Screen.fullScreen;//今のシーンタイプを取得
     }
 
     /// <summary> クリア判定 </summary>
@@ -53,11 +54,8 @@ public class GameFlagCheck : MonoBehaviour
         Screen.fullScreen = this.isFullScreen;
     }
 
-    public bool IsFullScreen()
-    {
-        return isFullScreen;
-    }
-
+    /// <summary> ポーズボタンを押したとき </summary>
+    /// <param name="pause">true:ポーズを始める false:ポーズを終わる</param>
     public void Pause(bool pause)
     {
         isPause = pause;
@@ -73,6 +71,8 @@ public class GameFlagCheck : MonoBehaviour
         }
     }
 
+    /// <summary> ポーズをしているか </summary>
+    /// <returns></returns>
     public bool IsPause()
     {
         return isPause;
