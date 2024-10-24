@@ -10,7 +10,6 @@ public class GameOverManager : MonoBehaviour
 
     /*スコア*/
     [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private TextMeshProUGUI highScoreText;
 
     [SerializeField] private AudioSource audioSource;//決定音を再生する
 
@@ -21,15 +20,7 @@ public class GameOverManager : MonoBehaviour
         gameFlagCheck = GetComponent<GameFlagCheck>();
 
         //スコアを取得する
-        var scoreData = GetComponent<WriteReadToCSV>();
-        scoreData.ReadDataToCSV();
-        var data = scoreData.Data();
-        //今回のスコア
-        var score = data[0];
-        scoreText.text = score[0];
-        //ハイスコア
-        score = data[1];
-        highScoreText.text = score[0];
+        scoreText.text = ScoreManager.score.ToString();
 
         //変更先のシーン名を設定
         mainManager.ChangeSceneName("TitleScene");
