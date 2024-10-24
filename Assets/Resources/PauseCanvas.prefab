@@ -1190,7 +1190,7 @@ MonoBehaviour:
   - {fileID: 7903891509435430756}
   - {fileID: 2415410875290402384}
   - {fileID: 5177586650968687571}
-  moveSound: {fileID: 8300000, guid: 1408437e54480ed4f91f9e3bc12fb8d0, type: 3}
+  moveSound: {fileID: 8300000, guid: 3d551d0cad4f0ed4eb92028272ca883c, type: 3}
   submitSound: {fileID: 8300000, guid: 1408437e54480ed4f91f9e3bc12fb8d0, type: 3}
   canselSound: {fileID: 8300000, guid: d763a6166405001498f465c49efb95bb, type: 3}
 --- !u!82 &2750917545989614301
