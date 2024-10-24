@@ -75,6 +75,8 @@ public class PlayerScript : MonoBehaviour
             hpSprite[i].gameObject.SetActive(false);
         }
 
+        hpCanvas.SetActive(false);
+
         bombNum = bombMaxNum;
         score = GameObject.Find("Manager").GetComponent<ScoreManager>();
         bombFadeElapsedTime = bombFadeMaxTime;
@@ -132,7 +134,6 @@ public class PlayerScript : MonoBehaviour
 
         if(hpScript.IsDead())
         {
-            Debug.Log("死んだ");
             return;
         }
 
@@ -151,6 +152,11 @@ public class PlayerScript : MonoBehaviour
 
         if(updateExample.OnPressed(UpdateExample.ActionType.Move))
         {
+            if(hpCanvas.activeSelf)
+            {
+                hpCanvas.SetActive(false);
+            }
+
             velocity = updateExample.GetVelocity() * Time.deltaTime * speed;
             this.transform.position = new Vector3(Mathf.Clamp(transform.position.x + velocity.x, screenLeftBottom.x, screenRightTop.x), Mathf.Clamp(transform.position.y + velocity.y, screenLeftBottom.y, screenRightTop.y), 0.0f);
         }
@@ -205,8 +211,6 @@ public class PlayerScript : MonoBehaviour
 
             bombNum--;
             audioSource.PlayOneShot(bomb);
-
-            Debug.Log(bombNum + "個");
 
             //敵が生成した弾のゲームオブジェクトをすべて取得する
             var objs = GameObject.FindGameObjectsWithTag("EnemyBullet");
@@ -271,6 +275,8 @@ public class PlayerScript : MonoBehaviour
         //無敵時間の時は攻撃を受けないように
         if (isInvincible) return;
 
+        hpCanvas.SetActive(true);
+
         //エフェクトを作成
         Instantiate(effector, this.transform.position, Quaternion.identity);
         audioSource.PlayOneShot(damage);
@@ -310,11 +316,11 @@ public class PlayerScript : MonoBehaviour
 
         isInvincible = true;
         myRenderer.enabled = false;
-        hpCanvas.SetActive(false);
 
         if (hpScript.IsDead())
         {
             gameOverCheck.GameOver();
+            hpCanvas.SetActive(false);
         }
     }
 }
