@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -21,7 +19,7 @@ public class MainManager : MonoBehaviour
     /*サウンド*/
     private AudioSource audioSource;//音をフェードさせる
     private float sourceFadeSpeed;//フェードスピード
-    private const float sourceVolume = 1;//最大音量
+    private const float kSourceVolume = 1;//最大音量
 
     private void Start()
     {
@@ -42,7 +40,7 @@ public class MainManager : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         audioSource.volume = 0;//音量を0に
-        sourceFadeSpeed = fadeSpeed / sourceVolume;
+        sourceFadeSpeed = fadeSpeed / kSourceVolume;
     }
 
 
@@ -69,7 +67,7 @@ public class MainManager : MonoBehaviour
         fadePanelImageAlpha.color = color;
 
         //音量を変更する
-        if(audioSource.volume < sourceVolume)
+        if(audioSource.volume < kSourceVolume)
         {
             audioSource.volume += sourceFadeSpeed;
         }

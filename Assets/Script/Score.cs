@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary> ƒXƒRƒA‚ğİ’è‚·‚é </summary>

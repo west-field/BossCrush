@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +17,7 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;//真っ直ぐ動く弾のプレハブ
     private bool isShot;//生成できるかどうか
     private float shotElapsedTime;//攻撃した後の経過時間
-    private const float shotMaxTime = 5.0f;//次攻撃ができるまでの時間
+    private const float kShotMaxTime = 5.0f;//次攻撃ができるまでの時間
 
     /*HP*/
     private HPScript hpScript;//HP
@@ -28,15 +26,15 @@ public class PlayerScript : MonoBehaviour
     private GameObject[] hpSprite;
 
     /*ボム*/
-    private const int bombMaxNum = 3;
+    private const int kBombMaxNum = 3;
     private int bombNum;
     //ボムで消した弾のスコアを取得する
     private ScoreManager score;
     //ボムを使ったときに白い画像をフェードさせる
     [SerializeField] private Image bombFade;
-    private const float bombFadeMaxTime = 20.0f;
+    private const float kBombFadeMaxTime = 20.0f;
     private float bombFadeAlpha;
-    private const float bombFadeAlphaMax = 0.7f;
+    private const float kBombFadeAlphaMax = 0.7f;
     private float bombFadeAlphaSpeed;
     private float bombFadeElapsedTime;//経過時間
     private bool isBombFade;
@@ -50,7 +48,7 @@ public class PlayerScript : MonoBehaviour
     /*登場*/
     private bool isEntry;//登場中かどうか
     private float entryElapsedTime;//経過時間
-    private const float entryMaxTime = 30.0f;//登場完了までの時間
+    private const float kEntryMaxTime = 30.0f;//登場完了までの時間
 
     private Renderer myRenderer;//自身の画像を見えなくする
     private Renderer shield;//シールドの画像を見えなくする
@@ -83,18 +81,18 @@ public class PlayerScript : MonoBehaviour
 
         hpCanvas.SetActive(false);
 
-        bombNum = bombMaxNum;
+        bombNum = kBombMaxNum;
         score = manager.GetComponent<ScoreManager>();
-        bombFadeElapsedTime = bombFadeMaxTime;
-        bombFadeAlpha = bombFadeAlphaMax;
-        bombFadeAlphaSpeed = bombFadeAlphaMax / bombFadeMaxTime;
+        bombFadeElapsedTime = kBombFadeMaxTime;
+        bombFadeAlpha = kBombFadeAlphaMax;
+        bombFadeAlphaSpeed = kBombFadeAlphaMax / kBombFadeMaxTime;
         bombFade.enabled = false;
         isBombFade = false;
 
         audioSource = GetComponent<AudioSource>();
 
         isEntry = true;
-        entryElapsedTime = entryMaxTime;
+        entryElapsedTime = kEntryMaxTime;
 
         myRenderer = GetComponent<Renderer>();
         myRenderer.enabled = false;
@@ -211,7 +209,7 @@ public class PlayerScript : MonoBehaviour
             //経過時間が 0 になったら
             if (shotElapsedTime <= 0.0f)
             {
-                shotElapsedTime = shotMaxTime;
+                shotElapsedTime = kShotMaxTime;
                 isShot = true;//攻撃できるように
             }
         }
@@ -222,8 +220,8 @@ public class PlayerScript : MonoBehaviour
     {
         if (bombNum > 0)
         {
-            bombFadeElapsedTime = bombFadeMaxTime;
-            bombFadeAlpha = bombFadeAlphaMax;
+            bombFadeElapsedTime = kBombFadeMaxTime;
+            bombFadeAlpha = kBombFadeAlphaMax;
             bombFade.enabled = true;
             isBombFade = true;
 
@@ -262,7 +260,7 @@ public class PlayerScript : MonoBehaviour
         //経過時間が 0 になったら
         if (entryElapsedTime <= 0.0f)
         {
-            entryElapsedTime = entryMaxTime;
+            entryElapsedTime = kEntryMaxTime;
             isEntry = false;
             shield.enabled = false;
         }

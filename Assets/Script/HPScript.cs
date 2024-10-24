@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary> HPŠî–{î•ñ </summary>
 public class HPScript

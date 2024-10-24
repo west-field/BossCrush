@@ -39,7 +39,7 @@ public class BulletParent : MonoBehaviour
         this.transform.position += velocity * Time.deltaTime * speed;
     }
 
-    /// <summary> UŒ‚—Í‚ğæ“¾ </summary>
+    /// <summary> UŒ‚—Í </summary>
     public int AttackPower()
     {
         return attackPower;

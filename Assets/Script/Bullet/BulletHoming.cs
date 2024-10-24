@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary> ホーミング弾 </summary>
@@ -7,7 +5,7 @@ public class BulletHoming : BulletParent
 {
     private bool isHoming;//ホーミングできるか
     private float homingElapsedTime;//経過時間
-    private const float homingMaxTime = 60.0f;//ホーミングできる時間
+    private const float kHomingMaxTime = 60.0f;//ホーミングできる時間
 
     private Transform targetPos;//ホーミングする対象
 
@@ -31,7 +29,7 @@ public class BulletHoming : BulletParent
         GetComponent<Score>().SetScore(550);
 
         isHoming = true;
-        homingElapsedTime = homingMaxTime;
+        homingElapsedTime = kHomingMaxTime;
     }
 
     protected override void Move()
@@ -42,7 +40,7 @@ public class BulletHoming : BulletParent
             if (homingElapsedTime <= 0)
             {
                 isHoming = false;
-                homingElapsedTime = homingMaxTime;
+                homingElapsedTime = kHomingMaxTime;
                 return;
             }
 

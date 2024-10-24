@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary> エネミーの状態変化 </summary>
@@ -35,12 +33,12 @@ public class EnemyStateChange : MonoBehaviour
     /*状態によって変わる攻撃*/
     private bool isShot;//生成できるかどうか
     private float shotElapsedTime;//攻撃した後の経過時間
-    private const float shotMaxTime = 25.0f;//次攻撃ができるまでの時間
+    private const float kShotMaxTime = 25.0f;//次攻撃ができるまでの時間
 
     /*常に発射する攻撃*/
     private bool isAlwaysShot;//生成できるかどうか
     private float alwaysShotElapsedTime;//攻撃した後の経過時間
-    private const float alwaysShotMaxTime = 80.0f;//次攻撃ができるまでの時間
+    private const float kAlwaysShotMaxTime = 80.0f;//次攻撃ができるまでの時間
 
     /*音*/
     private AudioSource audioSource;
@@ -53,7 +51,7 @@ public class EnemyStateChange : MonoBehaviour
     /*登場*/
     private bool isEntry;//登場中か
     private float entryElapsedTime;//エントリー経過時間
-    private const float entryMaxTime = 80.0f;//エントリー時間
+    private const float kEntryMaxTime = 80.0f;//エントリー時間
 
     private void Start()
     {
@@ -61,17 +59,17 @@ public class EnemyStateChange : MonoBehaviour
 
         state = BulletType.TargetShot;
         isShot = true;
-        shotElapsedTime = shotMaxTime;
+        shotElapsedTime = kShotMaxTime;
 
         isAlwaysShot = true;
-        alwaysShotElapsedTime = alwaysShotMaxTime;
+        alwaysShotElapsedTime = kAlwaysShotMaxTime;
 
         audioSource = GetComponent<AudioSource>();
 
         speed = 1.0f;
 
         isEntry = true;
-        entryElapsedTime = entryMaxTime;
+        entryElapsedTime = kEntryMaxTime;
     }
 
     private void FixedUpdate()
@@ -88,7 +86,7 @@ public class EnemyStateChange : MonoBehaviour
         }
 
         //上下に移動する
-        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time - entryMaxTime) * speed + defaultPosition.y, defaultPosition.z);
+        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time - kEntryMaxTime) * speed + defaultPosition.y, defaultPosition.z);
 
         CheckAlive();
 
@@ -141,7 +139,7 @@ public class EnemyStateChange : MonoBehaviour
             {
                 //攻撃ができるように
                 isShot = true;
-                shotElapsedTime = shotMaxTime;
+                shotElapsedTime = kShotMaxTime;
             }
         }
 
@@ -163,7 +161,7 @@ public class EnemyStateChange : MonoBehaviour
             if (alwaysShotElapsedTime <= 0)
             {
                 isAlwaysShot = true;
-                alwaysShotElapsedTime = alwaysShotMaxTime;
+                alwaysShotElapsedTime = kAlwaysShotMaxTime;
             }
         }
     }
