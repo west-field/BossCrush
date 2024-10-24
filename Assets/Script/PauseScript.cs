@@ -2,35 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> ポーズ </summary>
 public class PauseScript : MonoBehaviour
 {
-    private UpdateExample updateExample;
-    private GameFlagCheck gameFlagCheck;
-    private SelectYesOrNo selectYesOrNo;
-
     /// <summary> ポーズメニュー </summary>
-    enum PauseItem
+    enum PauseMenu
     {
-        FullScreenChange,
+        WindowModeChange,
         Back,
         End,
 
         Max
     }
 
+    private UpdateExample updateExample;
+    private GameFlagCheck gameFlagCheck;
+
+
     /*選択*/
-    private int selectMenuNum;
-    private PauseItem drawType;
+    private SelectYesOrNo selectYesOrNo;//はいかいいえを選ぶ
+    private int selectMenuNum;//今選択しているポーズメニュー
+    private PauseMenu pauseMenuSelect;//今選んでいるメニューの種類
 
     [SerializeField] private GameObject frame;//選択フレーム
-    [SerializeField] private Transform[] framePosition = new Transform[(int)PauseItem.Max];//フレームの位置
+    [SerializeField] private Transform[] framePosition = new Transform[(int)PauseMenu.Max];//フレームの位置
 
     /*音*/
     private AudioSource audioSource;
-    [SerializeField] private AudioClip pauseSound;
-    [SerializeField] private AudioClip moveSound;
-    [SerializeField] private AudioClip submitSound;
-    [SerializeField] private AudioClip canselSound;
+    [SerializeField] private AudioClip pauseSound;//ポーズが開かれたときの音
+    [SerializeField] private AudioClip moveSound;//カーソルを移動させるときの音
+    [SerializeField] private AudioClip submitSound;//決定ボタンを押したときの音
+    [SerializeField] private AudioClip canselSound;//キャンセルボタンを押したときの音
 
     private void Start()
     {
@@ -42,7 +44,7 @@ public class PauseScript : MonoBehaviour
         selectYesOrNo.gameObject.SetActive(false);
 
         selectMenuNum = 0;
-        drawType = PauseItem.Max;
+        pauseMenuSelect = PauseMenu.Max;
 
         var nextFramePos = frame.transform.position;
         nextFramePos.y = framePosition[selectMenuNum].position.y;
@@ -54,15 +56,15 @@ public class PauseScript : MonoBehaviour
 
     private void Update()
     {
-        switch(drawType)
+        switch(pauseMenuSelect)
         {
-            case PauseItem.FullScreenChange:
-                FullScreenChangeUpdate();
+            case PauseMenu.WindowModeChange:
+                WindowModeChangeUpdate();
                 break;
-            case PauseItem.Back:
+            case PauseMenu.Back:
                 BackUpdate();
                 break;
-            case PauseItem.End:
+            case PauseMenu.End:
                 EndUpdate();
                 break;
             default:
@@ -71,23 +73,25 @@ public class PauseScript : MonoBehaviour
         }
     }
 
+    /// <summary> 通常(ポーズメニューを選んでいないときの処理) </summary>
     private void NormalUpdate()
     {
         if (updateExample.OnTrigger(UpdateExample.ActionType.Move))
         {
-            if (updateExample.GetVelocity().x > 0 || updateExample.GetVelocity().y > 0)
+            if (updateExample.GetVelocity().x < 0 || updateExample.GetVelocity().y > 0)
             {
                 //上
-                selectMenuNum = (selectMenuNum + ((int)PauseItem.Max - 1)) % (int)PauseItem.Max;
+                selectMenuNum = (selectMenuNum + ((int)PauseMenu.Max - 1)) % (int)PauseMenu.Max;
             }
-            else if (updateExample.GetVelocity().x < 0 || updateExample.GetVelocity().y < 0)
+            else if (updateExample.GetVelocity().x > 0 || updateExample.GetVelocity().y < 0)
             {
                 //下
-                selectMenuNum = (selectMenuNum + 1) % (int)PauseItem.Max;
+                selectMenuNum = (selectMenuNum + 1) % (int)PauseMenu.Max;
             }
             //サウンドを鳴らす
             audioSource.PlayOneShot(moveSound);
 
+            //フレームの位置を変更
             var nextFramePos = frame.transform.position;
             nextFramePos.y = framePosition[selectMenuNum].position.y;
             frame.transform.position = nextFramePos;
@@ -95,15 +99,17 @@ public class PauseScript : MonoBehaviour
 
         if (updateExample.OnTrigger(UpdateExample.ActionType.Submit))
         {
-            audioSource.PlayOneShot(submitSound);
-            selectYesOrNo.gameObject.SetActive(true);
-            drawType = (PauseItem)selectMenuNum;
-            switch (drawType)
+            audioSource.PlayOneShot(submitSound);//サウンドを鳴らす
+            selectYesOrNo.gameObject.SetActive(true);//はいいいえを選択するキャンバスを表示する
+            pauseMenuSelect = (PauseMenu)selectMenuNum;//今選んだメニューの種類を取得
+
+            //文字変更
+            switch (pauseMenuSelect)
             {
-                case PauseItem.FullScreenChange:
+                case PauseMenu.WindowModeChange:
                     selectYesOrNo.TextChange("Screen Change ?");
                     break;
-                case PauseItem.End:
+                case PauseMenu.End:
                     selectYesOrNo.TextChange("Game End ?");
                     break;
             }
@@ -112,30 +118,33 @@ public class PauseScript : MonoBehaviour
             updateExample.OnTrigger(UpdateExample.ActionType.Pause))
         {
             audioSource.PlayOneShot(canselSound);
-            drawType = PauseItem.Back;
+            pauseMenuSelect = PauseMenu.Back;
         }
     }
 
-    private void FullScreenChangeUpdate()
+    /// <summary> ウィンドウモードを変更する </summary>
+    private void WindowModeChangeUpdate()
     {
         if (selectYesOrNo.IsYes())
         {
             gameFlagCheck.ChangeFullScreen();
-            CanselToBackPause();
+            BackPause();
         }
         else if (selectYesOrNo.IsNo() ||
              updateExample.OnTrigger(UpdateExample.ActionType.Cancel))
         {
-            CanselToBackPause();
+            BackPause();
         }
     }
 
+    /// <summary> 戻る　ポーズを終了する </summary>
     private void BackUpdate()
     {
         Destroy(this.gameObject);
         gameFlagCheck.Pause(false);
     }
 
+    /// <summary> ゲームを終わる </summary>
     private void EndUpdate()
     {
         if (selectYesOrNo.IsYes())
@@ -149,14 +158,15 @@ public class PauseScript : MonoBehaviour
         else if (selectYesOrNo.IsNo() ||
             updateExample.OnTrigger(UpdateExample.ActionType.Cancel))
         {
-            CanselToBackPause();
+            BackPause();
         }
     }
 
-    private void CanselToBackPause()
+    /// <summary> はいといいえのキャンバスを表示している時にポーズ画面に戻る処理 </summary>
+    private void BackPause()
     {
         selectYesOrNo.gameObject.SetActive(false);
-        drawType = PauseItem.Max;
+        pauseMenuSelect = PauseMenu.Max;
         audioSource.PlayOneShot(canselSound);
     }
 }

@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> スコアを設定する </summary>
 public class Score : MonoBehaviour
 {
-    protected int score;
+    protected int score;//スコア
 
     private void Start()
     {

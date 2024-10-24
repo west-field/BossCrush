@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+/// <summary> スコアマネージャー </summary>
 public class ScoreManager : MonoBehaviour
 {
-    private int score;
-    [SerializeField] private TextMeshProUGUI scoreText;
+    private int score;//スコア
 
-    private WriteReadToCSV scoreData;
+    [SerializeField] private TextMeshProUGUI scoreText;//スコアを表示するテキスト
+
+    private WriteReadToCSV scoreData;//スコアデータ
 
     private void Start()
     {
@@ -37,9 +39,11 @@ public class ScoreManager : MonoBehaviour
 
             Debug.Log("保存");
             scoreData.InitializeData(1);
+            //今回のスコア
             scoreData.SetDataAt(index, score);
             scoreData.AddData();
 
+            //ハイスコア
             var list = scoreData.Data();
             Debug.Log(list.Count.ToString());
             if (list.Count >= 2)
@@ -52,13 +56,9 @@ public class ScoreManager : MonoBehaviour
                 scoreData.SetDataAt(index, score);
             }
             scoreData.AddData();
+
             scoreData.WriteDataToCSV();
         }
-    }
-
-    private void OnEnable()
-    {
-        Debug.Log("OnEnable");
     }
 
     /// <summary> スコアを追加する </summary>

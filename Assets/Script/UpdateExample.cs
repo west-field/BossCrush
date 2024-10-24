@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary> ボタン </summary>
 public class UpdateExample : MonoBehaviour
 {
     /// <summary> アクションのタイプ </summary>
@@ -60,31 +61,13 @@ public class UpdateExample : MonoBehaviour
         return false;
     }
 
+    /// <summary> 移動 </summary>
+    /// <returns></returns>
     public Vector3 GetVelocity()
     {
         var vec2 = inputActionMap[ActionType.Move.ToString()].ReadValue<Vector2>();
         vec2.Normalize();
 
         return new Vector3(vec2.x, vec2.y, 0.0f);
-    }
-
-    private void Update()
-    {
-        if (OnTrigger(ActionType.Bomb))
-        {
-            Debug.Log("★ボムが押されました★");
-        }
-        if(OnTrigger(ActionType.Pause))
-        {
-            Debug.Log("★ポーズが押されました★");
-        }
-        if(OnTrigger(ActionType.Submit))
-        {
-            Debug.Log("★決定が押されました★");
-        }
-        if (OnTrigger(ActionType.Cancel))
-        {
-            Debug.Log("★キャンセルが押されました★");
-        }
     }
 }

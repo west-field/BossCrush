@@ -36,8 +36,9 @@ public class EnemyScript : MonoBehaviour
         //プレイヤーが発射した弾に当たった時
         if (collision.transform.tag == "PlayerBullet")
         {
+            //攻撃力を取得する
             var damagePower = collision.gameObject.GetComponent<BulletParent>().AttackPower();
-            Destroy(collision.gameObject);
+            Destroy(collision.gameObject);//当たった弾を消す
 
             if (hpScript.IsDead()) return;
 
@@ -46,18 +47,16 @@ public class EnemyScript : MonoBehaviour
 
             if (hpScript.IsDead())
             {
-                //色を変更する
-                ColorChange();
-                deathEffect.Play();
-                scoreManager.AddScore(score);
-                audioSource.PlayOneShot(damage);
-                //this.GetComponent<BoxCollider2D>().enabled = false;
+                ColorChange();//色を変更する
+                deathEffect.Play();//エフェクトを再生
+                scoreManager.AddScore(score);//スコアを渡す
+                audioSource.PlayOneShot(damage);//ダメージ音を再生
                 return;
             }
         }
     }
 
-    /// <summary> 色を変える </summary>
+    /// <summary> 色を灰色に変える </summary>
     public void ColorChange()
     {
         this.GetComponent<SpriteRenderer>().color = Color.gray;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
+/// <summary> CSVファイルの書き込み、読み込み </summary>
 public class WriteReadToCSV : MonoBehaviour
 {
     private List<string[]> readDataList = new List<string[]>();//スコアデータを格納するリスト
@@ -35,7 +36,7 @@ public class WriteReadToCSV : MonoBehaviour
     /// <summary> CSVファイルにデータを書き込む </summary>
     public void WriteDataToCSV()
     {
-        //ファイルがあるか
+        //ファイルがないときは
         if (!File.Exists(filePath))
         {
             //ファイル作成
@@ -43,7 +44,7 @@ public class WriteReadToCSV : MonoBehaviour
         }
 
         //CSVファイルに書き込む
-        StreamWriter writer = new StreamWriter(filePath, false);//trueを指定することで追記モードで開く
+        StreamWriter writer = new StreamWriter(filePath, false);
 
         for (int i = lineNow; i < writeDataList.Count; i++)
         {
@@ -75,7 +76,7 @@ public class WriteReadToCSV : MonoBehaviour
     /// <summary> CSVファイルのデータを読み込む </summary>
     public void ReadDataToCSV()
     {
-        //ファイルがあるか
+        //ファイルがある時
         if(File.Exists(filePath))
         {
             //CSVファイルを読み込む
@@ -91,6 +92,8 @@ public class WriteReadToCSV : MonoBehaviour
         }
     }
 
+    /// <summary> データを取得 </summary>
+    /// <returns></returns>
     public List<string[]> Data()
     {
         return readDataList;

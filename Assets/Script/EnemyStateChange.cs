@@ -5,8 +5,6 @@ using UnityEngine;
 /// <summary> エネミーの状態変化 </summary>
 public class EnemyStateChange : MonoBehaviour
 {
-    private GameFlagCheck clearCheck;
-
     /// <summary> ボスタイプ </summary>
     enum BossType
     {
@@ -24,43 +22,49 @@ public class EnemyStateChange : MonoBehaviour
         HomingShot,
         Max
     }
+    
+    private GameFlagCheck gameFlagCheck;
 
-    [SerializeField] private GameObject[] enemyBosses;
+    [SerializeField] private GameObject[] enemyBosses = new GameObject[(int)BossType.Max];
     /*弾を発射する*/
-    [SerializeField] private GameObject[] bulletPrefabs;
-    [SerializeField] private Transform[] bulletStartPosition;//弾を発射する位置
-    private BulletType state;
+    [SerializeField] private GameObject[] bulletPrefabs = new GameObject[(int)BulletType.Max];
+    [SerializeField] private Transform[] bulletStartPosition = new Transform[(int)BossType.Max];//弾を発射する位置
 
+    private BulletType state;//状態変化に応じて攻撃方法を変更する
+
+    /*状態によって変わる攻撃*/
     private bool isShot;//生成できるかどうか
     private float shotElapsedTime;//攻撃した後の経過時間
     private const float shotMaxTime = 25.0f;//次攻撃ができるまでの時間
 
-    private bool isStraightShot;//生成できるかどうか
-    private float straightShotElapsedTime;//攻撃した後の経過時間
-    private const float straightShotMaxTime = 80.0f;//次攻撃ができるまでの時間
+    /*常に発射する攻撃*/
+    private bool isAlwaysShot;//生成できるかどうか
+    private float alwaysShotElapsedTime;//攻撃した後の経過時間
+    private const float alwaysShotMaxTime = 80.0f;//次攻撃ができるまでの時間
 
+    /*音*/
     private AudioSource audioSource;
-    [SerializeField] private AudioClip shot;
+    [SerializeField] private AudioClip shot;//撃つときの音
 
     /*上下に移動*/
     private Vector3 defaultPosition;//元の位置
     private float speed;//移動スピード
 
     /*登場*/
-    private bool isEntry;
+    private bool isEntry;//登場中か
     private float entryElapsedTime;//エントリー経過時間
     private const float entryMaxTime = 80.0f;//エントリー時間
 
     private void Start()
     {
-        clearCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
+        gameFlagCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
 
         state = BulletType.TargetShot;
         isShot = true;
         shotElapsedTime = shotMaxTime;
 
-        isStraightShot = true;
-        straightShotElapsedTime = straightShotMaxTime;
+        isAlwaysShot = true;
+        alwaysShotElapsedTime = alwaysShotMaxTime;
 
         audioSource = GetComponent<AudioSource>();
 
@@ -78,20 +82,20 @@ public class EnemyStateChange : MonoBehaviour
             return;
         }
 
-        if(clearCheck.IsClear())
+        if(gameFlagCheck.IsClear())
         {
             return;
         }
 
         //上下に移動する
-        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time - entryElapsedTime) * speed + defaultPosition.y, defaultPosition.z);
+        this.transform.position = new Vector3(defaultPosition.x, Mathf.Sin(Time.time - entryMaxTime) * speed + defaultPosition.y, defaultPosition.z);
 
         CheckAlive();
 
         Shot();
     }
 
-    /// <summary> エントリー </summary>
+    /// <summary> 登場 </summary>
     private void Entry()
     {
         entryElapsedTime--;
@@ -103,7 +107,6 @@ public class EnemyStateChange : MonoBehaviour
         if (entryElapsedTime <= 0.0f)
         {
             defaultPosition = this.transform.position;
-            entryElapsedTime = entryMaxTime;
             isEntry = false;
         }
     }
@@ -111,6 +114,7 @@ public class EnemyStateChange : MonoBehaviour
     /// <summary> 攻撃 </summary>
     private void Shot()
     {
+        //状態によって変わる攻撃
         if(isShot)
         {
             for (int i = 0; i < enemyBosses.Length; i++)
@@ -121,24 +125,28 @@ public class EnemyStateChange : MonoBehaviour
                     //何もしない
                     continue;
                 }
-                //弾を生成
+
+                //部位が生きている時は弾を生成
                 Instantiate(bulletPrefabs[(int)state], bulletStartPosition[i].position, Quaternion.identity);
             }
 
-            audioSource.PlayOneShot(shot);
-            isShot = false;
+            audioSource.PlayOneShot(shot);//音を再生
+            isShot = false;//いったん攻撃ができないようにする
         }
         else
         {
             shotElapsedTime--;
+            //経過時間が0よりも小さくなったら
             if (shotElapsedTime <= 0)
             {
+                //攻撃ができるように
                 isShot = true;
                 shotElapsedTime = shotMaxTime;
             }
         }
 
-        if(isStraightShot)
+        //常に発射する攻撃
+        if(isAlwaysShot)
         {
             for (int i = 0; i < enemyBosses.Length; i++)
             {
@@ -147,15 +155,15 @@ public class EnemyStateChange : MonoBehaviour
             }
 
             audioSource.PlayOneShot(shot);
-            isStraightShot = false;
+            isAlwaysShot = false;
         }
         else
         {
-            straightShotElapsedTime--;
-            if (straightShotElapsedTime <= 0)
+            alwaysShotElapsedTime--;
+            if (alwaysShotElapsedTime <= 0)
             {
-                isStraightShot = true;
-                straightShotElapsedTime = straightShotMaxTime;
+                isAlwaysShot = true;
+                alwaysShotElapsedTime = alwaysShotMaxTime;
             }
         }
     }
@@ -163,19 +171,22 @@ public class EnemyStateChange : MonoBehaviour
     /// <summary> 生きているかを確認 </summary>
     private void CheckAlive()
     {
-        var aliveNum = 0;
+        var aliveNum = 0;//生きている数(最大3)
+
         foreach (var enemy in enemyBosses)
         {
-            //生きているとき
+            //死んでいないとき
             if(!enemy.GetComponent<EnemyScript>().GetHPScript().IsDead())
             {
                 aliveNum++;
             }
         }
+
+        //生きている数によって攻撃方法を変更する
         switch(aliveNum)
         {
             case 0:
-                clearCheck.Clear();
+                gameFlagCheck.Clear();
                 break;
             case 1:
                 state = BulletType.HomingShot;
@@ -190,7 +201,7 @@ public class EnemyStateChange : MonoBehaviour
         //本体のライフが0になるとクリア
         if(enemyBosses[(int)BossType.Main].GetComponent<EnemyScript>().GetHPScript().IsDead())
         {
-            clearCheck.Clear();
+            gameFlagCheck.Clear();
 
             foreach (var enemy in enemyBosses)
             {

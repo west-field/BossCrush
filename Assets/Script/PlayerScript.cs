@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary> プレイヤー </summary>
 public class PlayerScript : MonoBehaviour
 {
-    private GameFlagCheck gameOverCheck;
+    private GameFlagCheck gameFlagCheck;//フラグ
     private UpdateExample updateExample;//ボタンの判定
 
     /*移動*/
     private float speed;//移動スピード
     private Vector3 velocity;//移動量
+    //画面外に出ないように
     private Vector3 screenLeftBottom;
     private Vector3 screenRightTop;
     /*弾*/
@@ -28,7 +30,9 @@ public class PlayerScript : MonoBehaviour
     /*ボム*/
     private const int bombMaxNum = 3;
     private int bombNum;
+    //ボムで消した弾のスコアを取得する
     private ScoreManager score;
+    //ボムを使ったときに白い画像をフェードさせる
     [SerializeField] private Image bombFade;
     private const float bombFadeMaxTime = 20.0f;
     private float bombFadeAlpha;
@@ -43,19 +47,21 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private AudioClip damage;
     [SerializeField] private AudioClip bomb;
 
-    /*もう一度左から出てくる*/
-    private bool isInvincible;//無敵時間中かどうか
-    private float invincibleElapsedTime;//無敵経過時間
-    private const float invincibleMaxTime = 30.0f;//無敵時間
+    /*登場*/
+    private bool isEntry;//登場中かどうか
+    private float entryElapsedTime;//経過時間
+    private const float entryMaxTime = 30.0f;//登場完了までの時間
+
     private Renderer myRenderer;//自身の画像を見えなくする
     private Renderer shield;//シールドの画像を見えなくする
-    [SerializeField] private ParticleSystem effector;
+    
+    [SerializeField] private ParticleSystem effect;//エフェクト
 
     private void Start()
     {
-        gameOverCheck = GameObject.Find("Manager").GetComponent<GameFlagCheck>();
-        //example = GameObject.Find("Manager").GetComponent<CSharpEventExample>();
-        updateExample = GameObject.Find("Manager").GetComponent<UpdateExample>();
+        var manager = GameObject.Find("Manager");
+        gameFlagCheck = manager.GetComponent<GameFlagCheck>();
+        updateExample = manager.GetComponent<UpdateExample>();
 
         speed = 4.0f;
         velocity = Vector2.zero;
@@ -78,7 +84,7 @@ public class PlayerScript : MonoBehaviour
         hpCanvas.SetActive(false);
 
         bombNum = bombMaxNum;
-        score = GameObject.Find("Manager").GetComponent<ScoreManager>();
+        score = manager.GetComponent<ScoreManager>();
         bombFadeElapsedTime = bombFadeMaxTime;
         bombFadeAlpha = bombFadeAlphaMax;
         bombFadeAlphaSpeed = bombFadeAlphaMax / bombFadeMaxTime;
@@ -87,8 +93,8 @@ public class PlayerScript : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
 
-        isInvincible = true;
-        invincibleElapsedTime = invincibleMaxTime;
+        isEntry = true;
+        entryElapsedTime = entryMaxTime;
 
         myRenderer = GetComponent<Renderer>();
         myRenderer.enabled = false;
@@ -100,7 +106,7 @@ public class PlayerScript : MonoBehaviour
 
     private void Update()
     {
-        if (gameOverCheck.IsPause())
+        if (gameFlagCheck.IsPause())
         {
             return;
         }
@@ -115,6 +121,7 @@ public class PlayerScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //ボムのフェード
         if(isBombFade)
         {
             bombFadeElapsedTime--;
@@ -137,14 +144,16 @@ public class PlayerScript : MonoBehaviour
             return;
         }
 
-        if(gameOverCheck.IsClear())
+        //ゲームクリアした時
+        if(gameFlagCheck.IsClear())
         {
+            //残っているライフ分得点を取得する
             GameObject.Find("Manager").GetComponent<ScoreManager>().AddScore(hpScript.GetHp() * 10000);
             hpScript.Damage(kHpMax);
             return;
         }
 
-        if(isInvincible)
+        if(isEntry)
         {
             StartAgain();
             return;
@@ -152,13 +161,23 @@ public class PlayerScript : MonoBehaviour
 
         if(updateExample.OnPressed(UpdateExample.ActionType.Move))
         {
+            //移動中はHPが見えないように
             if(hpCanvas.activeSelf)
             {
                 hpCanvas.SetActive(false);
             }
 
+            //移動
             velocity = updateExample.GetVelocity() * Time.deltaTime * speed;
             this.transform.position = new Vector3(Mathf.Clamp(transform.position.x + velocity.x, screenLeftBottom.x, screenRightTop.x), Mathf.Clamp(transform.position.y + velocity.y, screenLeftBottom.y, screenRightTop.y), 0.0f);
+        }
+        else
+        {
+            //移動していないときははHPが見えるように
+            if (!hpCanvas.activeSelf)
+            {
+                hpCanvas.SetActive(true);
+            }
         }
 
         //低速になる
@@ -185,7 +204,6 @@ public class PlayerScript : MonoBehaviour
             }
         }
 
-        //まだ攻撃できないとき
         if (!isShot)
         {
             shotElapsedTime--;
@@ -236,16 +254,16 @@ public class PlayerScript : MonoBehaviour
             this.transform.position = new Vector3(-10.0f, 0.0f, 0.0f);
         }
 
-        invincibleElapsedTime--;
+        entryElapsedTime--;
 
         //画面左から右へ移動する
         this.transform.position += new Vector3(0.1f, 0.0f, 0.0f);
 
         //経過時間が 0 になったら
-        if (invincibleElapsedTime <= 0.0f)
+        if (entryElapsedTime <= 0.0f)
         {
-            invincibleElapsedTime = invincibleMaxTime;
-            isInvincible = false;
+            entryElapsedTime = entryMaxTime;
+            isEntry = false;
             shield.enabled = false;
         }
     }
@@ -260,7 +278,7 @@ public class PlayerScript : MonoBehaviour
         }
 
         //無敵時間の時は攻撃を受けないように
-        if (isInvincible) return;
+        if (isEntry) return;
 
         //エネミーに接触した時
         if (collision.transform.tag == "Enemy")
@@ -273,12 +291,12 @@ public class PlayerScript : MonoBehaviour
     private void Damage(int damagePower)
     {
         //無敵時間の時は攻撃を受けないように
-        if (isInvincible) return;
+        if (isEntry) return;
 
         hpCanvas.SetActive(true);
 
         //エフェクトを作成
-        Instantiate(effector, this.transform.position, Quaternion.identity);
+        Instantiate(effect, this.transform.position, Quaternion.identity);
         audioSource.PlayOneShot(damage);
 
         hpScript.Damage(damagePower);
@@ -314,12 +332,12 @@ public class PlayerScript : MonoBehaviour
             Destroy(obj);
         }
 
-        isInvincible = true;
+        isEntry = true;
         myRenderer.enabled = false;
 
         if (hpScript.IsDead())
         {
-            gameOverCheck.GameOver();
+            gameFlagCheck.GameOver();
             hpCanvas.SetActive(false);
         }
     }

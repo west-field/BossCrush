@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary> HPバー </summary>
 public class HPBar : MonoBehaviour
 {
-    private Slider slider;
+    private Slider slider;//スライダー
 
     private void Start()
     {

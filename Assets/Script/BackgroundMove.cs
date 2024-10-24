@@ -9,8 +9,8 @@ public class BackgroundMove : MonoBehaviour
     private const float kMaxLength = 1.0f;
     private const string kPropName = "_MainTex";
 
-    private float offsetSpeed;
-    private Material material;
+    private float offsetSpeed;//移動スピード
+    private Material material;//画像を移動させるためのマテリアル
 
     private void Start()
     {
@@ -35,6 +35,7 @@ public class BackgroundMove : MonoBehaviour
 
     private void OnDestroy()
     {
+        //マテリアルのOffsetを戻しておく
         if(material)
         {
             material.SetTextureOffset(kPropName, Vector2.zero);
