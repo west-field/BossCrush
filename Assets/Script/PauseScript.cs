@@ -6,6 +6,7 @@ public class PauseScript : MonoBehaviour
     /// <summary> ポーズメニュー </summary>
     enum PauseMenu
     {
+        Key,
         WindowModeChange,
         Back,
         End,
@@ -24,6 +25,8 @@ public class PauseScript : MonoBehaviour
 
     [SerializeField] private GameObject frame;//選択フレーム
     [SerializeField] private Transform[] framePosition = new Transform[(int)PauseMenu.Max];//フレームの位置
+
+    [SerializeField] private GameObject keySeting;
 
     /*音*/
     private AudioSource audioSource;
@@ -48,6 +51,8 @@ public class PauseScript : MonoBehaviour
         nextFramePos.y = framePosition[selectMenuNum].position.y;
         frame.transform.position = nextFramePos;
 
+        keySeting.SetActive(false);
+
         audioSource = this.GetComponent<AudioSource>();
         audioSource.PlayOneShot(pauseSound);
     }
@@ -56,6 +61,9 @@ public class PauseScript : MonoBehaviour
     {
         switch(pauseMenuSelect)
         {
+            case PauseMenu.Key:
+                KeyUpdate();
+                break;
             case PauseMenu.WindowModeChange:
                 WindowModeChangeUpdate();
                 break;
@@ -101,9 +109,11 @@ public class PauseScript : MonoBehaviour
             selectYesOrNo.gameObject.SetActive(true);//はいいいえを選択するキャンバスを表示する
             pauseMenuSelect = (PauseMenu)selectMenuNum;//今選んだメニューの種類を取得
 
-            //文字変更
             switch (pauseMenuSelect)
             {
+                case PauseMenu.Key:
+                    keySeting.SetActive(true);
+                    break;
                 case PauseMenu.WindowModeChange:
                     selectYesOrNo.TextChange("Screen Change ?");
                     break;
@@ -117,6 +127,16 @@ public class PauseScript : MonoBehaviour
         {
             audioSource.PlayOneShot(canselSound);
             pauseMenuSelect = PauseMenu.Back;
+        }
+    }
+
+    private void KeyUpdate()
+    {
+        if(updateExample.OnTrigger(UpdateExample.ActionType.Submit) ||
+            updateExample.OnTrigger(UpdateExample.ActionType.Cancel))
+        {
+            keySeting.SetActive(false);
+            BackPause();
         }
     }
 
