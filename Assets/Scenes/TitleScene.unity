@@ -566,8 +566,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 793057730}
-  submit: {fileID: 8300000, guid: 1408437e54480ed4f91f9e3bc12fb8d0, type: 3}
-  pause: {fileID: 8300000, guid: 7459dd80b35d8824dafd79a0e57e6d89, type: 3}
 --- !u!82 &793057729
 AudioSource:
   m_ObjectHideFlags: 0
@@ -674,7 +672,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 1408437e54480ed4f91f9e3bc12fb8d0, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

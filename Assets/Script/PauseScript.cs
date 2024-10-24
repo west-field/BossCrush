@@ -27,6 +27,7 @@ public class PauseScript : MonoBehaviour
 
     /*‰¹*/
     private AudioSource audioSource;
+    [SerializeField] private AudioClip pauseSound;
     [SerializeField] private AudioClip moveSound;
     [SerializeField] private AudioClip submitSound;
     [SerializeField] private AudioClip canselSound;
@@ -48,6 +49,7 @@ public class PauseScript : MonoBehaviour
         frame.transform.position = nextFramePos;
 
         audioSource = this.GetComponent<AudioSource>();
+        audioSource.PlayOneShot(pauseSound);
     }
 
     private void Update()

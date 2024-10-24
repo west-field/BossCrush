@@ -10,8 +10,6 @@ public class TitleManager : MonoBehaviour
     private GameFlagCheck gameFlagCheck;
 
     [SerializeField] private AudioSource audioSource;//決定音を再生する
-    [SerializeField] private AudioClip submit;
-    [SerializeField] private AudioClip pause;
 
     private void Start()
     {
@@ -33,14 +31,13 @@ public class TitleManager : MonoBehaviour
         //決定ボタンを押したとき
         if(updateExample.OnTrigger(UpdateExample.ActionType.Submit))
         {
-            audioSource.PlayOneShot(submit);
+            audioSource.Play();
             Debug.Log("シーンを変更する");
             //シーンを変更する
             mainManager.StartChangeScene();
         }
         else if(updateExample.OnTrigger(UpdateExample.ActionType.Pause))
         {
-            audioSource.PlayOneShot(pause);
             gameFlagCheck.Pause(true);
             return;
         }
