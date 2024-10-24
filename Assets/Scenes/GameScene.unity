@@ -2113,7 +2113,7 @@ MonoBehaviour:
   shot: {fileID: 8300000, guid: 7f574b524f3dbe74ea76a13c6854369b, type: 3}
   damage: {fileID: 8300000, guid: 5c5a46139477d3b4f90755c9553628c8, type: 3}
   bomb: {fileID: 8300000, guid: 820995cdac6f5c844b095e5e674a9009, type: 3}
-  effector: {fileID: 7041730069584757102, guid: 9671cd221e1d18646a7ff97501fa9087, type: 3}
+  effect: {fileID: 7041730069584757102, guid: 9671cd221e1d18646a7ff97501fa9087, type: 3}
 --- !u!50 &1188177334
 Rigidbody2D:
   serializedVersion: 4
