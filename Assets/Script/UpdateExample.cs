@@ -27,8 +27,6 @@ public class UpdateExample : MonoBehaviour
 
         if (playerInput == null) return;
         inputActionMap = playerInput.currentActionMap;
-        Debug.Log(inputActionMap.ToString());
-
     }
 
     /// <summary> ‰Ÿ‚µ‚Ä‚¢‚éŠÔ </summary>
